@@ -28,6 +28,7 @@ public class PhysicsWorld {
                 if ((collider = doesCollide(object)) != null) {
                     if (!object.isTrigger() && !collider.isTrigger()) {
                         object.setX(object.getX() - stepDx);
+                        object.setDx(0);
                         break;
                     }
                 }
@@ -37,6 +38,7 @@ public class PhysicsWorld {
                 if ((collider = doesCollide(object)) != null) {
                     if (!object.isTrigger() && !collider.isTrigger()) {
                         object.setY(object.getY() - stepDy);
+                        object.setDy(0);
                         break;
                     }
                 }
