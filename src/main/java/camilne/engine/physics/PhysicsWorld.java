@@ -6,16 +6,24 @@ import java.util.*;
 
 public class PhysicsWorld {
 
+    private static PhysicsWorld instance;
+
     private int steps;
     private float gravity;
     private List<GameObject> objects;
     private Map<GameObject, Set<String>> collisionGroups;
 
-    public PhysicsWorld(float gravity) {
+    private PhysicsWorld() {
         steps = 10;
-        this.gravity = gravity;
         this.objects = new ArrayList<>();
         this.collisionGroups = new HashMap<>();
+    }
+
+    public static synchronized PhysicsWorld getInstance() {
+        if (instance == null) {
+            instance = new PhysicsWorld();
+        }
+        return instance;
     }
 
     public void update(float delta) {

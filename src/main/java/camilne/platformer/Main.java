@@ -1,7 +1,6 @@
 package camilne.platformer;
 
 import camilne.engine.Camera;
-import camilne.engine.GameObject;
 import camilne.engine.Sprite;
 import camilne.engine.graphics.*;
 import camilne.engine.input.InputHandler;
@@ -9,7 +8,6 @@ import camilne.engine.physics.PhysicsWorld;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,11 +22,11 @@ public class Main {
     private static final int HEIGHT = 720;
 
     private long window;
-    private PhysicsWorld physicsWorld;
     private SpriteBatch spriteBatch;
     private List<Sprite> sprites;
     private Camera camera;
     private Shader shader;
+    private World world;
 
     private Sprite character;
     private boolean leftDown;
@@ -41,13 +39,13 @@ public class Main {
 
     private Main() { }
 
-    public void run() throws IOException {
+    public void run() throws Exception {
         init();
         loop();
         glfwTerminate();
     }
 
-    private void init() throws IOException {
+    private void init() throws IOException, WorldLoadingException {
         glfwInit();
         window = createWindow();
 
@@ -61,11 +59,12 @@ public class Main {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         spriteBatch = new SpriteBatch();
-        physicsWorld = new PhysicsWorld(-5);
+        PhysicsWorld.getInstance().setGravity(-9.8f);
         camera = new Camera(WIDTH, HEIGHT);
         shader = new Shader("shader.vert", "shader.frag");
         shader.addUniform("u_mvp");
         sprites = new ArrayList<>();
+        world = WorldReader.readWorld("world.xml");
 
         createObjects();
     }
@@ -95,7 +94,7 @@ public class Main {
         character = new Sprite(characterAnimation, 100, 600, 50, 50);
         character.setDynamic(true);
 //        character.setDx(32f);
-        physicsWorld.addObject(character, Set.of("ground"));
+        PhysicsWorld.getInstance().addObject(character, Set.of("ground"));
         sprites.add(character);
 
         var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 0, 32, 32, 32);
@@ -104,19 +103,19 @@ public class Main {
         var enemy = new Sprite(enemyAnimation, 400, 600, 50, 50);
         enemy.setDynamic(true);
         enemy.setDx(-32f);
-        physicsWorld.addObject(enemy, Set.of("ground"));
+        PhysicsWorld.getInstance().addObject(enemy, Set.of("ground"));
         sprites.add(enemy);
 
-        var floorTexture = new TextureRegion(TextureFactory.create("floor.png"));
-        var floor = new Sprite(floorTexture, 0, 50, 1000, 100);
-        floor.setCollisionGroup("ground");
-        physicsWorld.addObject(floor, new HashSet<>());
-        sprites.add(floor);
-
-        var trigger = new Sprite(floorTexture, 0, 300, 300, 30);
-        trigger.setTrigger(true);
-        physicsWorld.addObject(trigger, new HashSet<>());
-        sprites.add(trigger);
+//        var floorTexture = new TextureRegion(TextureFactory.create("floor.png"));
+//        var floor = new Sprite(floorTexture, 0, 50, 1000, 100);
+//        floor.setCollisionGroup("ground");
+//        PhysicsWorld.getInstance().addObject(floor, new HashSet<>());
+//        sprites.add(floor);
+//
+//        var trigger = new Sprite(floorTexture, 0, 300, 300, 30);
+//        trigger.setTrigger(true);
+//        PhysicsWorld.getInstance().addObject(trigger, new HashSet<>());
+//        sprites.add(trigger);
     }
 
     private void loop() {
@@ -168,7 +167,7 @@ public class Main {
             character.setDx(0);
         }
 
-        physicsWorld.update(delta);
+        PhysicsWorld.getInstance().update(delta);
     }
 
     private void render() {
@@ -179,6 +178,7 @@ public class Main {
         shader.setUniform("u_mvp", camera.getCombinedMatrix());
 
         spriteBatch.begin();
+        world.render(spriteBatch);
         for (var sprite : sprites) {
             spriteBatch.draw(sprite);
         }
