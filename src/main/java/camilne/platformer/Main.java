@@ -1,12 +1,14 @@
 package camilne.platformer;
 
-import camilne.engine.*;
-import org.joml.Vector2f;
+import camilne.engine.Camera;
+import camilne.engine.Sprite;
+import camilne.engine.graphics.*;
+import camilne.engine.physics.PhysicsWorld;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL.*;
+import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Main {
 
@@ -28,16 +30,28 @@ public class Main {
         var firstFrame = new TextureRegion(TextureFactory.create("characters.png"), 0, 0, 32, 32);
         var animation = new Animation(firstFrame, 4, 20);
         animation.start();
-        var sprite = new Sprite(animation, 100, 100, 50, 50);
+        var sprite = new Sprite(animation, 100, 600, 50, 50);
+        sprite.setDynamic(true);
         var shader = new Shader("shader.vert", "shader.frag");
         shader.addUniform("u_mvp");
 
         var camera = new Camera(WIDTH, HEIGHT);
 
-        while (!glfwWindowShouldClose(window)) {
-            AnimationPool.getInstance().update();
+        var physicsWorld = new PhysicsWorld(-5);
+        physicsWorld.addObject(sprite);
 
-            camera.translate(new Vector2f(-0.1f, 0));
+        var floorTexture = new TextureRegion(TextureFactory.create("floor.png"));
+        var floor = new Sprite(floorTexture, 0, 50, 1000, 100);
+        physicsWorld.addObject(floor);
+
+        var trigger = new Sprite(floorTexture, 0, 300, 300, 30);
+        trigger.setTrigger(true);
+        physicsWorld.addObject(trigger);
+
+        while (!glfwWindowShouldClose(window)) {
+            physicsWorld.update(1f / 60);
+
+            AnimationPool.getInstance().update();
 
             glClear(GL_COLOR_BUFFER_BIT);
             shader.bind();
@@ -45,6 +59,8 @@ public class Main {
 
             spriteBatch.begin();
             spriteBatch.draw(sprite);
+            spriteBatch.draw(floor);
+            spriteBatch.draw(trigger);
             spriteBatch.end();
 
             var error = glGetError();

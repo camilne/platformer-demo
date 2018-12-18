@@ -1,5 +1,6 @@
-package camilne.engine;
+package camilne.engine.graphics;
 
+import camilne.engine.IOUtil;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.Closeable;

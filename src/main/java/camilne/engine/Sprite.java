@@ -1,25 +1,22 @@
 package camilne.engine;
 
+import camilne.engine.graphics.Animation;
+import camilne.engine.graphics.Texture;
+import camilne.engine.graphics.TextureRegion;
+
 import java.util.List;
 
-public class Sprite {
+public class Sprite extends GameObject {
 
     private Animation animation;
-    private float x;
-    private float y;
-    private float width;
-    private float height;
 
     public Sprite(TextureRegion region, float x, float y, float width, float height) {
         this(new Animation(List.of(region), 0), x, y, width, height);
     }
 
     public Sprite(Animation animation, float x, float y, float width, float height) {
+        super(x, y, width, height);
         this.animation = animation;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
     }
 
     public Animation getAnimation() {
@@ -28,21 +25,5 @@ public class Sprite {
 
     public Texture getTexture() {
         return animation.getCurrentFrame().getTexture();
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
     }
 }

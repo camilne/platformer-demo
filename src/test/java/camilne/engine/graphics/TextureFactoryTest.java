@@ -1,5 +1,6 @@
-package camilne.engine;
+package camilne.engine.graphics;
 
+import camilne.engine.SetupLwjglThreadExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

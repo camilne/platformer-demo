@@ -1,4 +1,4 @@
-package camilne.engine;
+package camilne.engine.graphics;
 
 import java.io.IOException;
 import java.util.HashMap;

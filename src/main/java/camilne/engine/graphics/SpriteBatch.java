@@ -1,5 +1,6 @@
-package camilne.engine;
+package camilne.engine.graphics;
 
+import camilne.engine.Sprite;
 import org.lwjgl.BufferUtils;
 
 import java.util.ArrayList;
@@ -79,12 +80,12 @@ public class SpriteBatch {
             var u2 = sprite.getAnimation().getCurrentFrame().getU2();
             var v2 = sprite.getAnimation().getCurrentFrame().getV2();
 
-            vertices.add(new Vertex(sprite.getX() - sprite.getWidth() / 2, sprite.getY() - sprite.getHeight() / 2, z, u, v2));
-            vertices.add(new Vertex(sprite.getX() + sprite.getWidth() / 2, sprite.getY() - sprite.getHeight() / 2, z, u2, v2));
-            vertices.add(new Vertex(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2, z, u2, v));
-            vertices.add(new Vertex(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2, z, u2, v));
-            vertices.add(new Vertex(sprite.getX() - sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2, z, u, v));
-            vertices.add(new Vertex(sprite.getX() - sprite.getWidth() / 2, sprite.getY() - sprite.getHeight() / 2, z, u, v2));
+            vertices.add(new Vertex(sprite.getX(), sprite.getY(), z, u, v2));
+            vertices.add(new Vertex(sprite.getX() + sprite.getWidth(), sprite.getY(), z, u2, v2));
+            vertices.add(new Vertex(sprite.getX() + sprite.getWidth(), sprite.getY() + sprite.getHeight(), z, u2, v));
+            vertices.add(new Vertex(sprite.getX() + sprite.getWidth(), sprite.getY() + sprite.getHeight(), z, u2, v));
+            vertices.add(new Vertex(sprite.getX(), sprite.getY() + sprite.getHeight(), z, u, v));
+            vertices.add(new Vertex(sprite.getX(), sprite.getY(), z, u, v2));
         }
         render(vertices);
 

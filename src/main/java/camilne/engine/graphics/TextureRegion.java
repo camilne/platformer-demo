@@ -1,4 +1,4 @@
-package camilne.engine;
+package camilne.engine.graphics;
 
 public class TextureRegion {
 
