@@ -32,6 +32,9 @@ public class Main {
     private boolean leftDown;
     private boolean rightDown;
 
+    private Animation characterIdleAnimation;
+    private Animation characterWalkAnimation;
+
     public static void main(String[] args) throws Exception {
         var main = new Main();
         main.run();
@@ -81,41 +84,65 @@ public class Main {
         var inputHandler = InputHandler.getInstance();
         inputHandler.setWindow(window);
 
-        inputHandler.addKeyDownAction(GLFW_KEY_A, () -> leftDown = true);
-        inputHandler.addKeyUpAction(GLFW_KEY_A, () -> leftDown = false);
-        inputHandler.addKeyDownAction(GLFW_KEY_D, () -> rightDown = true);
-        inputHandler.addKeyUpAction(GLFW_KEY_D, () -> rightDown = false);
+        inputHandler.addKeyDownAction(GLFW_KEY_A, () -> {
+            leftDown = true;
+
+            character.setAnimation(characterWalkAnimation);
+            characterWalkAnimation.start();
+            characterIdleAnimation.stop();
+        });
+        inputHandler.addKeyUpAction(GLFW_KEY_A, () -> {
+            leftDown = false;
+
+            if (!rightDown) {
+                character.setAnimation(characterIdleAnimation);
+                characterIdleAnimation.start();
+                characterWalkAnimation.stop();
+            }
+        });
+        inputHandler.addKeyDownAction(GLFW_KEY_D, () -> {
+            rightDown = true;
+
+            character.setAnimation(characterWalkAnimation);
+            characterWalkAnimation.start();
+            characterIdleAnimation.stop();
+        });
+        inputHandler.addKeyUpAction(GLFW_KEY_D, () -> {
+            rightDown = false;
+
+            if (!leftDown) {
+                character.setAnimation(characterIdleAnimation);
+                characterIdleAnimation.start();
+                characterWalkAnimation.stop();
+            }
+        });
+        inputHandler.addKeyDownAction(GLFW_KEY_SPACE, () -> character.setDy(500));
     }
 
     private void createObjects() throws IOException {
-        var characterFrame = new TextureRegion(TextureFactory.create("characters.png"), 0, 0, 32, 32);
-        var characterAnimation = new Animation(characterFrame, 4, 20);
-        characterAnimation.start();
-        character = new Sprite(characterAnimation, 100, 600, 50, 50);
+        characterIdleAnimation = new Animation(List.of(new TextureRegion(TextureFactory.create("characters.png"), 9, 42, 15, 22),
+                new TextureRegion(TextureFactory.create("characters.png"), 9, 42, 15, 22),
+                new TextureRegion(TextureFactory.create("characters.png"), 135, 41, 17, 22)), 30);
+        characterIdleAnimation.start();
+
+        var characterFrame = new TextureRegion(TextureFactory.create("characters.png"), 9, 42, 15, 22);
+        var characterAnimationStrip = new AnimationStrip(characterFrame, 17, 4);
+        characterWalkAnimation = new Animation(characterAnimationStrip, 7);
+
+        character = new Sprite(characterIdleAnimation, 100, 600, 30, 44);
         character.setDynamic(true);
-//        character.setDx(32f);
         PhysicsWorld.getInstance().addObject(character, Set.of("ground"));
         sprites.add(character);
 
-        var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 0, 32, 32, 32);
-        var enemyAnimation = new Animation(enemyFrame, 4, 20);
+        var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 6, 73, 18, 23);
+        var enemyAnimationStrip = new AnimationStrip(enemyFrame, 14, 4);
+        var enemyAnimation = new Animation(enemyAnimationStrip, 20);
         enemyAnimation.start();
-        var enemy = new Sprite(enemyAnimation, 400, 600, 50, 50);
+        var enemy = new Sprite(enemyAnimation, 400, 600, 36, 46);
         enemy.setDynamic(true);
         enemy.setDx(-32f);
         PhysicsWorld.getInstance().addObject(enemy, Set.of("ground"));
         sprites.add(enemy);
-
-//        var floorTexture = new TextureRegion(TextureFactory.create("floor.png"));
-//        var floor = new Sprite(floorTexture, 0, 50, 1000, 100);
-//        floor.setCollisionGroup("ground");
-//        PhysicsWorld.getInstance().addObject(floor, new HashSet<>());
-//        sprites.add(floor);
-//
-//        var trigger = new Sprite(floorTexture, 0, 300, 300, 30);
-//        trigger.setTrigger(true);
-//        PhysicsWorld.getInstance().addObject(trigger, new HashSet<>());
-//        sprites.add(trigger);
     }
 
     private void loop() {

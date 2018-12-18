@@ -10,5 +10,30 @@
         <tile x="5" y="0" id="stone_mid"/>
         <tile x="6" y="0" id="stone_mid"/>
         <tile x="7" y="0" id="stone_right"/>
+
+        <tile x="4" y="2" id="stone_cliff_left"/>
+        <tile x="5" y="2" id="stone_mid"/>
+        <tile x="6" y="2" id="stone_mid"/>
+        <tile x="7" y="2" id="stone_cliff_right"/>
+
+        <tile x="9" y="2" id="stone_cliff_left"/>
+        <tile x="10" y="2" id="stone_mid"/>
+        <tile x="11" y="3" id="stone_hill_left"/>
+        <tile x="12" y="3" id="stone_mid"/>
+        <tile x="13" y="3" id="stone_mid"/>
+        <tile x="14" y="3" id="stone_right"/>
+
+        <tile x="11" y="2" id="stone_hill_left2"/>
+        <tile x="12" y="2" id="stone_center"/>
+        <tile x="13" y="2" id="stone_center"/>
+        <tile x="14" y="2" id="stone_center"/>
+
+        <tile x="9" y="0" id="stone"/>
+        <tile x="10" y="0" id="stone_center"/>
+        <tile x="11" y="0" id="stone_center_rounded"/>
+        <tile x="12" y="0" id="stone_cliff_left"/>
+        <tile x="13" y="0" id="stone_cliff_right"/>
+        <tile x="14" y="0" id="stone_hill_left"/>
+        <tile x="15" y="0" id="stone_hill_right"/>
     </tiles>
 </world>

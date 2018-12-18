@@ -25,15 +25,15 @@ public class Animation {
         AnimationPool.getInstance().addAnimation(this);
     }
 
-    public Animation(TextureRegion frameSize, int frameCount, int frameDuration) {
-        this(createFramesFromStrip(frameSize, frameCount), frameDuration);
+    public Animation(AnimationStrip strip, int frameDuration) {
+        this(createFramesFromStrip(strip), frameDuration);
     }
 
-    private static List<TextureRegion> createFramesFromStrip(TextureRegion firstFrame, int frameCount) {
+    private static List<TextureRegion> createFramesFromStrip(AnimationStrip strip) {
         List<TextureRegion> frames = new ArrayList<>();
-        for (int i = 0; i < frameCount; i++) {
-            var offset = firstFrame.getX() + firstFrame.getWidth() * i;
-            frames.add(new TextureRegion(firstFrame).offset(offset, 0));
+        for (int i = 0; i < strip.getFrameCount(); i++) {
+            var offset = (strip.getFirstFrame().getWidth() + strip.getSpacing()) * i;
+            frames.add(new TextureRegion(strip.getFirstFrame()).offset(offset, 0));
         }
         return frames;
     }

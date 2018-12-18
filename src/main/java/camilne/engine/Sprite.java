@@ -19,6 +19,10 @@ public class Sprite extends GameObject {
         this.animation = animation;
     }
 
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
+
     public Animation getAnimation() {
         return animation;
     }
