@@ -33,9 +33,11 @@ public class PhysicsWorld {
                         break;
                     }
                 }
-
+            }
+            for (int i = 0; i < steps; i++) {
                 var stepDy = object.getDy() * delta / steps;
                 object.setY(object.getY() + stepDy);
+                GameObject collider;
                 if ((collider = doesCollide(object)) != null) {
                     if (!object.isTrigger() && !collider.isTrigger()) {
                         object.setY(object.getY() - stepDy);

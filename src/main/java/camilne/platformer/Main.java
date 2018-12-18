@@ -1,8 +1,10 @@
 package camilne.platformer;
 
 import camilne.engine.Camera;
+import camilne.engine.GameObject;
 import camilne.engine.Sprite;
 import camilne.engine.graphics.*;
+import camilne.engine.input.InputHandler;
 import camilne.engine.physics.PhysicsWorld;
 
 import java.io.IOException;
@@ -28,6 +30,10 @@ public class Main {
     private Camera camera;
     private Shader shader;
 
+    private Sprite character;
+    private boolean leftDown;
+    private boolean rightDown;
+
     public static void main(String[] args) throws Exception {
         var main = new Main();
         main.run();
@@ -44,6 +50,8 @@ public class Main {
     private void init() throws IOException {
         glfwInit();
         window = createWindow();
+
+        initInput();
 
         int vao = glGenVertexArrays();
         glBindVertexArray(vao);
@@ -70,20 +78,30 @@ public class Main {
         return window;
     }
 
+    private void initInput() {
+        var inputHandler = InputHandler.getInstance();
+        inputHandler.setWindow(window);
+
+        inputHandler.addKeyDownAction(GLFW_KEY_A, () -> leftDown = true);
+        inputHandler.addKeyUpAction(GLFW_KEY_A, () -> leftDown = false);
+        inputHandler.addKeyDownAction(GLFW_KEY_D, () -> rightDown = true);
+        inputHandler.addKeyUpAction(GLFW_KEY_D, () -> rightDown = false);
+    }
+
     private void createObjects() throws IOException {
         var characterFrame = new TextureRegion(TextureFactory.create("characters.png"), 0, 0, 32, 32);
         var characterAnimation = new Animation(characterFrame, 4, 20);
         characterAnimation.start();
-        var character = new Sprite(characterAnimation, 100, 600, 50, 50);
+        character = new Sprite(characterAnimation, 100, 600, 50, 50);
         character.setDynamic(true);
-        character.setDx(32f);
+//        character.setDx(32f);
         physicsWorld.addObject(character, Set.of("ground"));
         sprites.add(character);
 
         var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 0, 32, 32, 32);
         var enemyAnimation = new Animation(enemyFrame, 4, 20);
         enemyAnimation.start();
-        var enemy = new Sprite(enemyAnimation, 200, 600, 50, 50);
+        var enemy = new Sprite(enemyAnimation, 400, 600, 50, 50);
         enemy.setDynamic(true);
         enemy.setDx(-32f);
         physicsWorld.addObject(enemy, Set.of("ground"));
@@ -142,6 +160,14 @@ public class Main {
     }
 
     private void update(float delta) {
+        if (leftDown) {
+            character.setDx(-100);
+        } else if (rightDown) {
+            character.setDx(100);
+        } else {
+            character.setDx(0);
+        }
+
         physicsWorld.update(delta);
     }
 
