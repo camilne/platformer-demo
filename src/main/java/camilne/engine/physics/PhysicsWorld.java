@@ -2,19 +2,20 @@ package camilne.engine.physics;
 
 import camilne.engine.GameObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class PhysicsWorld {
 
     private int steps;
     private float gravity;
     private List<GameObject> objects;
+    private Map<GameObject, Set<String>> collisionGroups;
 
     public PhysicsWorld(float gravity) {
         steps = 10;
         this.gravity = gravity;
         this.objects = new ArrayList<>();
+        this.collisionGroups = new HashMap<>();
     }
 
     public void update(float delta) {
@@ -56,15 +57,21 @@ public class PhysicsWorld {
 
     private GameObject doesCollide(GameObject object) {
         for (var o : objects) {
-            if (!o.equals(object) && object.getBounds().intersects(o.getBounds())) {
+            if (!o.equals(object)
+                    && o.getCollisionGroup() != null
+                    && collisionGroups.containsKey(object)
+                    && (collisionGroups.get(object).isEmpty()
+                    || collisionGroups.get(object).contains(o.getCollisionGroup()))
+                    && object.getBounds().intersects(o.getBounds())) {
                 return o;
             }
         }
         return null;
     }
 
-    public void addObject(GameObject object) {
+    public void addObject(GameObject object, Set<String> collisionGroups) {
         objects.add(object);
+        this.collisionGroups.put(object, collisionGroups);
     }
 
     public float getGravity() {

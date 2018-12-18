@@ -7,7 +7,9 @@ import camilne.engine.physics.PhysicsWorld;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL.createCapabilities;
@@ -75,17 +77,27 @@ public class Main {
         var character = new Sprite(characterAnimation, 100, 600, 50, 50);
         character.setDynamic(true);
         character.setDx(32f);
-        physicsWorld.addObject(character);
+        physicsWorld.addObject(character, Set.of("ground"));
         sprites.add(character);
+
+        var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 0, 32, 32, 32);
+        var enemyAnimation = new Animation(enemyFrame, 4, 20);
+        enemyAnimation.start();
+        var enemy = new Sprite(enemyAnimation, 200, 600, 50, 50);
+        enemy.setDynamic(true);
+        enemy.setDx(-32f);
+        physicsWorld.addObject(enemy, Set.of("ground"));
+        sprites.add(enemy);
 
         var floorTexture = new TextureRegion(TextureFactory.create("floor.png"));
         var floor = new Sprite(floorTexture, 0, 50, 1000, 100);
-        physicsWorld.addObject(floor);
+        floor.setCollisionGroup("ground");
+        physicsWorld.addObject(floor, new HashSet<>());
         sprites.add(floor);
 
         var trigger = new Sprite(floorTexture, 0, 300, 300, 30);
         trigger.setTrigger(true);
-        physicsWorld.addObject(trigger);
+        physicsWorld.addObject(trigger, new HashSet<>());
         sprites.add(trigger);
     }
 

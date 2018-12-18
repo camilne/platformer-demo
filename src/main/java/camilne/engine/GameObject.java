@@ -13,6 +13,7 @@ public abstract class GameObject {
     private AABB bounds;
     private boolean dynamic;
     private boolean trigger;
+    private String collisionGroup;
 
     public GameObject(float x, float y, float width, float height) {
         this.x = x;
@@ -24,6 +25,7 @@ public abstract class GameObject {
         this.bounds = new AABB(x, y, width, height);
         this.dynamic = false;
         this.trigger = false;
+        this.collisionGroup = null;
     }
 
     private void updateBounds() {
@@ -103,5 +105,13 @@ public abstract class GameObject {
 
     public void setTrigger(boolean trigger) {
         this.trigger = trigger;
+    }
+
+    public String getCollisionGroup() {
+        return collisionGroup;
+    }
+
+    public void setCollisionGroup(String collisionGroup) {
+        this.collisionGroup = collisionGroup;
     }
 }
