@@ -13,6 +13,7 @@
 
         <lwjgl.version>3.2.1</lwjgl.version>
         <lwjgl.natives>natives-windows</lwjgl.natives>
+        <joml.version>1.9.12</joml.version>
 
         <junit.version>5.3.2</junit.version>
     </properties>
@@ -83,6 +84,12 @@
             <artifactId>lwjgl-stb</artifactId>
             <version>${lwjgl.version}</version>
             <classifier>${lwjgl.natives}</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.joml</groupId>
+            <artifactId>joml</artifactId>
+            <version>${joml.version}</version>
         </dependency>
 
         <!-- Test -->
