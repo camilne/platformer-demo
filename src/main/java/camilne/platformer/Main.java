@@ -1,9 +1,6 @@
 package camilne.platformer;
 
-import camilne.engine.Shader;
-import camilne.engine.Sprite;
-import camilne.engine.SpriteBatch;
-import camilne.engine.TextureFactory;
+import camilne.engine.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL.*;
@@ -20,12 +17,19 @@ public class Main {
         glBindVertexArray(vao);
 
         glClearColor(0, 0, 0.4f, 0);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         var spriteBatch = new SpriteBatch();
-        var sprite = new Sprite(TextureFactory.create("sprite.png"), 0.0f, 0.0f, 1.0f, 1.0f);
+        var firstFrame = new TextureRegion(TextureFactory.create("characters.png"), 0, 0, 32, 32);
+        var animation = new Animation(firstFrame, 4, 20);
+        animation.start();
+        var sprite = new Sprite(animation, 0.0f, 0.0f, 1.0f, 1.0f);
         var shader = new Shader("shader.vert", "shader.frag");
 
         while (!glfwWindowShouldClose(window)) {
+            AnimationPool.getInstance().update();
+
             glClear(GL_COLOR_BUFFER_BIT);
             shader.bind();
 

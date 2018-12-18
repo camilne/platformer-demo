@@ -72,12 +72,19 @@ public class SpriteBatch {
                 lastTexture.bind();
             }
 
-            vertices.add(new Vertex(sprite.getX() - sprite.getWidth() / 2, sprite.getY() - sprite.getHeight() / 2, spriteEntry.getZIndex(), 0.0f, 0.0f));
-            vertices.add(new Vertex(sprite.getX() + sprite.getWidth() / 2, sprite.getY() - sprite.getHeight() / 2, spriteEntry.getZIndex(), 1.0f, 0.0f));
-            vertices.add(new Vertex(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2, spriteEntry.getZIndex(), 1.0f, 1.0f));
-            vertices.add(new Vertex(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2, spriteEntry.getZIndex(), 1.0f, 1.0f));
-            vertices.add(new Vertex(sprite.getX() - sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2, spriteEntry.getZIndex(), 0.0f, 1.0f));
-            vertices.add(new Vertex(sprite.getX() - sprite.getWidth() / 2, sprite.getY() - sprite.getHeight() / 2, spriteEntry.getZIndex(), 0.0f, 0.0f));
+            var z = spriteEntry.getZIndex();
+
+            var u = sprite.getAnimation().getCurrentFrame().getU();
+            var v = sprite.getAnimation().getCurrentFrame().getV();
+            var u2 = sprite.getAnimation().getCurrentFrame().getU2();
+            var v2 = sprite.getAnimation().getCurrentFrame().getV2();
+
+            vertices.add(new Vertex(sprite.getX() - sprite.getWidth() / 2, sprite.getY() - sprite.getHeight() / 2, z, u, v2));
+            vertices.add(new Vertex(sprite.getX() + sprite.getWidth() / 2, sprite.getY() - sprite.getHeight() / 2, z, u2, v2));
+            vertices.add(new Vertex(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2, z, u2, v));
+            vertices.add(new Vertex(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2, z, u2, v));
+            vertices.add(new Vertex(sprite.getX() - sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2, z, u, v));
+            vertices.add(new Vertex(sprite.getX() - sprite.getWidth() / 2, sprite.getY() - sprite.getHeight() / 2, z, u, v2));
         }
         render(vertices);
 
@@ -98,6 +105,25 @@ public class SpriteBatch {
             glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 
             vertices.clear();
+        }
+    }
+
+    private final class SpriteEntry {
+
+        private final Sprite sprite;
+        private final float zIndex;
+
+        SpriteEntry(Sprite sprite, float zIndex) {
+            this.sprite = sprite;
+            this.zIndex = zIndex;
+        }
+
+        Sprite getSprite() {
+            return sprite;
+        }
+
+        float getZIndex() {
+            return zIndex;
         }
     }
 

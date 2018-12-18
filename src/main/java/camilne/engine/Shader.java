@@ -1,9 +1,9 @@
 package camilne.engine;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -29,7 +29,7 @@ public class Shader {
         }
 
         var source = new StringBuilder();
-        try (var reader = new BufferedReader(new InputStreamReader(Shader.class.getClassLoader().getResourceAsStream(path)))) {
+        try (var reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(Shader.class.getClassLoader().getResourceAsStream(path))))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 source.append(line).append("\n");
