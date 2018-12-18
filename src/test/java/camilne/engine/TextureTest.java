@@ -17,6 +17,11 @@ class TextureTest {
             assertEquals(4, texture.getWidth());
             assertEquals(2, texture.getHeight());
         }
+
+        try (var texture = new Texture("texture.jpg")) {
+            assertEquals(1, texture.getWidth());
+            assertEquals(1, texture.getHeight());
+        }
     }
 
     @Test
@@ -27,6 +32,10 @@ class TextureTest {
 
         try (var texture = new Texture("transparent.png")) {
             assertEquals(4, texture.getComponents());
+        }
+
+        try (var texture = new Texture("texture.jpg")) {
+            assertEquals(3, texture.getComponents());
         }
     }
 
