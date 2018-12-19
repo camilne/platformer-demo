@@ -3,7 +3,7 @@ package camilne.engine;
 import camilne.engine.physics.AABB;
 import camilne.engine.physics.Bounds;
 
-public abstract class GameObject {
+public class GameObject {
 
     private float x;
     private float y;

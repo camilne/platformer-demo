@@ -7,6 +7,6 @@ public abstract class Bounds {
     public abstract boolean intersects(Triangle other);
     public abstract void update(float x, float y, float width, float height);
     public abstract Bounds copy();
-    public abstract void scale(float amount);
-    public abstract void translate(float x, float y);
+    public abstract Bounds scale(float amount);
+    public abstract Bounds translate(float x, float y);
 }

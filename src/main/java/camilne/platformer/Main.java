@@ -57,7 +57,7 @@ public class Main {
         int vao = glGenVertexArrays();
         glBindVertexArray(vao);
 
-        glClearColor(0, 0, 0.4f, 0);
+        glClearColor(0.4f, 0.45f, 0.45f, 0);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -129,16 +129,16 @@ public class Main {
         character.setDynamic(true);
         PhysicsWorld.getInstance().addObject(character, Set.of("ground"));
         sprites.add(character);
-//
-//        var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 6, 73, 18, 23);
-//        var enemyAnimationStrip = new AnimationStrip(enemyFrame, 14, 4);
-//        var enemyAnimation = new Animation(enemyAnimationStrip, 20);
-//        enemyAnimation.start();
-//        var enemy = new Sprite(enemyAnimation, 400, 600, 36, 46);
-//        enemy.setDynamic(true);
-//        enemy.setDx(-32f);
-//        PhysicsWorld.getInstance().addObject(enemy, Set.of("ground"));
-//        sprites.add(enemy);
+
+        var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 6, 73, 18, 23);
+        var enemyAnimationStrip = new AnimationStrip(enemyFrame, 14, 4);
+        var enemyAnimation = new Animation(enemyAnimationStrip, 20);
+        enemyAnimation.start();
+        var enemy = new Sprite(enemyAnimation, 300, 600, 36, 46);
+        enemy.setDynamic(true);
+        enemy.setDx(-32f);
+        PhysicsWorld.getInstance().addObject(enemy, Set.of("ground"));
+        sprites.add(enemy);
     }
 
     private void loop() {
@@ -183,9 +183,9 @@ public class Main {
 
     private void update(float delta) {
         if (leftDown) {
-            character.setDx(-100);
+            character.setDx(-200);
         } else if (rightDown) {
-            character.setDx(100);
+            character.setDx(200);
         } else {
             character.setDx(0);
         }

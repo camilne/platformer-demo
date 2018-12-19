@@ -75,16 +75,18 @@ public class AABB extends Bounds {
     }
 
     @Override
-    public void scale(float amount) {
+    public Bounds scale(float amount) {
         setMaxX((getMaxX() - getMinX()) * amount + getMinX());
         setMaxY((getMaxY() - getMinY()) * amount + getMinY());
+        return this;
     }
 
     @Override
-    public void translate(float x, float y) {
+    public Bounds translate(float x, float y) {
         setMinX(getMinX() + x);
         setMinY(getMinY() + y);
         setMaxX(getMaxX() + x);
         setMaxY(getMaxY() + y);
+        return this;
     }
 }

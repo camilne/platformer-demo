@@ -69,6 +69,14 @@ public class PhysicsWorld {
         for (int i = 0; i < steps; i++) {
             var stepDx = object.getDx() * delta / steps;
             object.setX(object.getX() + stepDx);
+
+            if (slopeBelow(object)) {
+                object.setY(object.getY() - Math.abs(stepDx));
+                if (!getColliders(object).isEmpty()) {
+                    object.setY(object.getY() + Math.abs(stepDx));
+                }
+            }
+
             for (var collider : getColliders(object)) {
                 if (!object.isTrigger() && !collider.isTrigger()) {
                     if (collider.getBounds() instanceof SlopeLeft || collider.getBounds() instanceof SlopeRight) {
@@ -87,6 +95,17 @@ public class PhysicsWorld {
                 }
             }
         }
+    }
+
+    private boolean slopeBelow(GameObject object) {
+        final var testAmount = 20;
+        var test = object.getBounds().copy().translate(0, -testAmount);
+        for (var o : objects) {
+            if (object != o && test.intersects(o.getBounds()) && (o.getBounds() instanceof SlopeRight || o.getBounds() instanceof SlopeLeft)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void updateY(float delta, GameObject object) {

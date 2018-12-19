@@ -73,15 +73,17 @@ public class Triangle extends Bounds {
     }
 
     @Override
-    public void scale(float amount) {
+    public Bounds scale(float amount) {
         p2.sub(p1).mul(amount).add(p1);
         p3.sub(p1).mul(amount).add(p1);
+        return this;
     }
 
     @Override
-    public void translate(float x, float y) {
+    public Bounds translate(float x, float y) {
         p1.add(x, y);
         p2.add(x, y);
         p3.add(x, y);
+        return this;
     }
 }
