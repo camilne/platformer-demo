@@ -94,9 +94,6 @@ public class PhysicsWorld {
             var stepDy = object.getDy() * delta / steps;
             object.setY(object.getY() + stepDy);
             for (var collider : getColliders(object)) {
-//                if (object.isDynamic()) {
-//                    System.out.println(collider.getBounds().getClass().getSimpleName());
-//                }
                 if (!object.isTrigger() && !collider.isTrigger()) {
                     object.setY(object.getY() - stepDy);
                     object.setDy(0);

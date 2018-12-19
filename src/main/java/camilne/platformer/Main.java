@@ -89,6 +89,8 @@ public class Main {
             leftDown = true;
 
             character.setAnimation(characterWalkAnimation);
+            characterWalkAnimation.setFlipX(true);
+            characterIdleAnimation.setFlipX(true);
         });
         inputHandler.addKeyUpAction(GLFW_KEY_A, () -> {
             leftDown = false;
@@ -101,6 +103,8 @@ public class Main {
             rightDown = true;
 
             character.setAnimation(characterWalkAnimation);
+            characterWalkAnimation.setFlipX(false);
+            characterIdleAnimation.setFlipX(false);
         });
         inputHandler.addKeyUpAction(GLFW_KEY_D, () -> {
             rightDown = false;

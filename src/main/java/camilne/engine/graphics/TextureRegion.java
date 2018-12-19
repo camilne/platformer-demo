@@ -11,6 +11,7 @@ public class TextureRegion {
     private int y;
     private int width;
     private int height;
+    private boolean flipX;
 
     public TextureRegion(Texture texture) {
         this(texture, 0, 0, texture.getWidth(), texture.getHeight());
@@ -58,7 +59,7 @@ public class TextureRegion {
     }
 
     public float getU() {
-        return u;
+        return flipX ? u2 : u;
     }
 
     public float getV() {
@@ -66,7 +67,7 @@ public class TextureRegion {
     }
 
     public float getU2() {
-        return u2;
+        return flipX ? u : u2;
     }
 
     public float getV2() {
@@ -87,5 +88,13 @@ public class TextureRegion {
 
     public int getHeight() {
         return height;
+    }
+
+    public boolean isFlipX() {
+        return flipX;
+    }
+
+    public void setFlipX(boolean flipX) {
+        this.flipX = flipX;
     }
 }

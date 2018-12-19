@@ -10,6 +10,7 @@ public class Animation {
     private int frameDuration;
     private int frameTime;
     private boolean isRunning;
+    private boolean flipX;
 
     public Animation(List<TextureRegion> frames, int frameDuration) {
         if (frames.isEmpty()) {
@@ -56,7 +57,9 @@ public class Animation {
     }
 
     public TextureRegion getCurrentFrame() {
-        return frames.get(frameNumber);
+        var result = frames.get(frameNumber);
+        result.setFlipX(flipX);
+        return result;
     }
 
     public int getFrameCount() {
@@ -69,5 +72,13 @@ public class Animation {
 
     public boolean isRunning() {
         return isRunning;
+    }
+
+    public boolean isFlipX() {
+        return flipX;
+    }
+
+    public void setFlipX(boolean flipX) {
+        this.flipX = flipX;
     }
 }
