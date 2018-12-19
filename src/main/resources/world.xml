@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <world>
-    <tile-size>40</tile-size>
+    <tile-size>55</tile-size>
     <tiles>
         <tile x="0" y="0" id="stone_left"/>
         <tile x="1" y="0" id="stone_mid"/>
@@ -45,5 +45,14 @@
         <tile x="13" y="0" id="stone_cliff_right"/>
         <tile x="14" y="0" id="stone_hill_left"/>
         <tile x="15" y="0" id="stone_hill_right"/>
+
+        <tile x="16" y="0" id="stone_left"/>
+        <tile x="17" y="0" id="stone_mid"/>
+        <tile x="18" y="0" id="stone_mid"/>
+        <tile x="19" y="0" id="stone_mid"/>
+        <tile x="20" y="0" id="stone_mid"/>
+        <tile x="21" y="0" id="stone_mid"/>
+        <tile x="22" y="0" id="stone_mid"/>
+        <tile x="23" y="0" id="stone_right"/>
     </tiles>
 </world>

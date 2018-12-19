@@ -20,7 +20,7 @@ public class Player extends Sprite {
     private boolean rightDown;
 
     public Player(float x, float y) {
-        super(getDefaultRegion(), x, y, 30f, 44f);
+        super(getDefaultRegion(), x, y, 30f, 46f);
 
         initAnimation();
         initInput();
@@ -40,7 +40,7 @@ public class Player extends Sprite {
                 new TextureRegion(texture, 9, 42, 15, 22),
                 new TextureRegion(texture, 135, 41, 17, 22)), 30);
 
-        walkAnimation = new Animation(new AnimationStrip(new TextureRegion(texture, 9, 42, 15, 22),
+        walkAnimation = new Animation(new AnimationStrip(new TextureRegion(texture, 9, 41, 15, 23),
                 17, 4), 7);
 
         airUpAnimation = new Animation(List.of(new TextureRegion(texture, 168, 41, 16, 22)),

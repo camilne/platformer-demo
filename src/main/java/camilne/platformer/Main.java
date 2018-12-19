@@ -5,6 +5,7 @@ import camilne.engine.Sprite;
 import camilne.engine.graphics.*;
 import camilne.engine.input.InputHandler;
 import camilne.engine.physics.PhysicsWorld;
+import org.joml.Vector2f;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,6 +87,7 @@ public class Main {
         var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 6, 73, 18, 23);
         var enemyAnimationStrip = new AnimationStrip(enemyFrame, 14, 4);
         var enemyAnimation = new Animation(enemyAnimationStrip, 20);
+        enemyAnimation.setFlipX(true);
         enemyAnimation.start();
         var enemy = new Sprite(enemyAnimation, 300, 600, 36, 46);
         enemy.setDynamic(true);
@@ -136,6 +138,7 @@ public class Main {
 
     private void update(float delta) {
         player.update(delta);
+        camera.centerOn(new Vector2f(player.getX() + player.getWidth() / 2f, player.getY() + player.getHeight() / 2f));
 
         PhysicsWorld.getInstance().update(delta);
     }
