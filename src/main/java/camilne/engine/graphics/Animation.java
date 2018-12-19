@@ -1,5 +1,7 @@
 package camilne.engine.graphics;
 
+import camilne.engine.general.Property;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,8 @@ public class Animation {
     private int frameTime;
     private boolean isRunning;
     private boolean flipX;
+    private boolean shouldLoop;
+    private Property<Boolean> done;
 
     public Animation(List<TextureRegion> frames, int frameDuration) {
         if (frames.isEmpty()) {
@@ -22,6 +26,8 @@ public class Animation {
         this.frameNumber = 0;
         this.frameTime = 0;
         this.isRunning = false;
+        this.shouldLoop = true;
+        done = new Property<>(false);
 
         AnimationPool.getInstance().addAnimation(this);
     }
@@ -43,7 +49,13 @@ public class Animation {
         frameTime++;
         if (frameTime >= frameDuration) {
             frameTime = 0;
-            frameNumber = (frameNumber + 1) % getFrameCount();
+            frameNumber++;
+            if (frameNumber >= getFrameCount()) {
+                frameNumber = 0;
+                if (!shouldLoop) {
+                    done.set(true);
+                }
+            }
         }
     }
 
@@ -80,5 +92,17 @@ public class Animation {
 
     public void setFlipX(boolean flipX) {
         this.flipX = flipX;
+    }
+
+    public boolean isShouldLoop() {
+        return shouldLoop;
+    }
+
+    public void setShouldLoop(boolean shouldLoop) {
+        this.shouldLoop = shouldLoop;
+    }
+
+    public Property<Boolean> doneProperty() {
+        return done;
     }
 }

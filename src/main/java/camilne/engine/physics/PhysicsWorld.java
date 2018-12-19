@@ -114,12 +114,14 @@ public class PhysicsWorld {
             object.setY(object.getY() + stepDy);
             for (var collider : getColliders(object)) {
                 if (!object.isTrigger() && !collider.isTrigger()) {
+                    object.setGrounded(true);
                     object.setY(object.getY() - stepDy);
                     object.setDy(0);
                     return;
                 }
             }
         }
+        object.setGrounded(false);
     }
 
     public void addObject(GameObject object, Set<String> collisionGroups) {

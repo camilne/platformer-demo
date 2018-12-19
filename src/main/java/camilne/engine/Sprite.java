@@ -20,11 +20,11 @@ public class Sprite extends GameObject {
     }
 
     public void setAnimation(Animation animation) {
-        if (this.animation != null) {
-            this.animation.stop();
+        if (getAnimation() != null) {
+            getAnimation().stop();
         }
         this.animation = animation;
-        this.animation.start();
+        animation.start();
     }
 
     public Animation getAnimation() {
@@ -32,6 +32,6 @@ public class Sprite extends GameObject {
     }
 
     public Texture getTexture() {
-        return animation.getCurrentFrame().getTexture();
+        return getAnimation().getCurrentFrame().getTexture();
     }
 }

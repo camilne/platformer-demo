@@ -1,5 +1,6 @@
 package camilne.engine;
 
+import camilne.engine.general.Property;
 import camilne.engine.physics.AABB;
 import camilne.engine.physics.Bounds;
 
@@ -15,6 +16,7 @@ public class GameObject {
     private boolean dynamic;
     private boolean trigger;
     private String collisionGroup;
+    private Property<Boolean> grounded;
 
     public GameObject(float x, float y, float width, float height) {
         this.x = x;
@@ -27,6 +29,7 @@ public class GameObject {
         this.dynamic = false;
         this.trigger = false;
         this.collisionGroup = null;
+        this.grounded = new Property<>(false);
     }
 
     private void updateBounds() {
@@ -115,5 +118,17 @@ public class GameObject {
 
     public void setCollisionGroup(String collisionGroup) {
         this.collisionGroup = collisionGroup;
+    }
+
+    public Property<Boolean> groundedProperty() {
+        return grounded;
+    }
+
+    public boolean isGrounded () {
+        return grounded.get();
+    }
+
+    public void setGrounded(boolean grounded) {
+        this.grounded.set(grounded);
     }
 }

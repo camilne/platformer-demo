@@ -27,13 +27,7 @@ public class Main {
     private Camera camera;
     private Shader shader;
     private World world;
-
-    private Sprite character;
-    private boolean leftDown;
-    private boolean rightDown;
-
-    private Animation characterIdleAnimation;
-    private Animation characterWalkAnimation;
+    private Player player;
 
     public static void main(String[] args) throws Exception {
         var main = new Main();
@@ -67,10 +61,9 @@ public class Main {
         shader = new Shader("shader.vert", "shader.frag");
         shader.addUniform("u_mvp");
         sprites = new ArrayList<>();
-        createObjects();
         world = WorldReader.readWorld("world.xml");
 
-
+        createObjects();
     }
 
     private long createWindow() {
@@ -84,51 +77,11 @@ public class Main {
     private void initInput() {
         var inputHandler = InputHandler.getInstance();
         inputHandler.setWindow(window);
-
-        inputHandler.addKeyDownAction(GLFW_KEY_A, () -> {
-            leftDown = true;
-
-            character.setAnimation(characterWalkAnimation);
-            characterWalkAnimation.setFlipX(true);
-            characterIdleAnimation.setFlipX(true);
-        });
-        inputHandler.addKeyUpAction(GLFW_KEY_A, () -> {
-            leftDown = false;
-
-            if (!rightDown) {
-                character.setAnimation(characterIdleAnimation);
-            }
-        });
-        inputHandler.addKeyDownAction(GLFW_KEY_D, () -> {
-            rightDown = true;
-
-            character.setAnimation(characterWalkAnimation);
-            characterWalkAnimation.setFlipX(false);
-            characterIdleAnimation.setFlipX(false);
-        });
-        inputHandler.addKeyUpAction(GLFW_KEY_D, () -> {
-            rightDown = false;
-
-            if (!leftDown) {
-                character.setAnimation(characterIdleAnimation);
-            }
-        });
-        inputHandler.addKeyDownAction(GLFW_KEY_SPACE, () -> character.setDy(500));
     }
 
-    private void createObjects() throws IOException {
-        characterIdleAnimation = new Animation(List.of(new TextureRegion(TextureFactory.create("characters.png"), 9, 42, 15, 22),
-                new TextureRegion(TextureFactory.create("characters.png"), 9, 42, 15, 22),
-                new TextureRegion(TextureFactory.create("characters.png"), 135, 41, 17, 22)), 30);
-
-        var characterFrame = new TextureRegion(TextureFactory.create("characters.png"), 9, 42, 15, 22);
-        var characterAnimationStrip = new AnimationStrip(characterFrame, 17, 4);
-        characterWalkAnimation = new Animation(characterAnimationStrip, 7);
-
-        character = new Sprite(characterIdleAnimation, 100, 600, 30, 44);
-        character.setDynamic(true);
-        PhysicsWorld.getInstance().addObject(character, Set.of("ground"));
-        sprites.add(character);
+    private void createObjects() {
+        player = new Player(200, 500);
+        sprites.add(player);
 
         var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 6, 73, 18, 23);
         var enemyAnimationStrip = new AnimationStrip(enemyFrame, 14, 4);
@@ -182,13 +135,7 @@ public class Main {
     }
 
     private void update(float delta) {
-        if (leftDown) {
-            character.setDx(-200);
-        } else if (rightDown) {
-            character.setDx(200);
-        } else {
-            character.setDx(0);
-        }
+        player.update(delta);
 
         PhysicsWorld.getInstance().update(delta);
     }
