@@ -17,6 +17,12 @@ public class Tile extends Sprite {
     public Tile(TileType type, float x, float y, float size) throws IOException {
         super(getTileRegion(type), x, y, size, size);
         setCollisionGroup("ground");
+        var bounds = type.getBounds().copy(size);
+        bounds.translate(x, y);
+        if (type == TileType.STONE_HILL_LEFT) {
+            System.out.println(bounds.toString());
+        }
+        setBounds(bounds);
 
         this.type = type;
         PhysicsWorld.getInstance().addObject(this, new HashSet<>());

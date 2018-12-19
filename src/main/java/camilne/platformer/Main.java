@@ -88,32 +88,24 @@ public class Main {
             leftDown = true;
 
             character.setAnimation(characterWalkAnimation);
-            characterWalkAnimation.start();
-            characterIdleAnimation.stop();
         });
         inputHandler.addKeyUpAction(GLFW_KEY_A, () -> {
             leftDown = false;
 
             if (!rightDown) {
                 character.setAnimation(characterIdleAnimation);
-                characterIdleAnimation.start();
-                characterWalkAnimation.stop();
             }
         });
         inputHandler.addKeyDownAction(GLFW_KEY_D, () -> {
             rightDown = true;
 
             character.setAnimation(characterWalkAnimation);
-            characterWalkAnimation.start();
-            characterIdleAnimation.stop();
         });
         inputHandler.addKeyUpAction(GLFW_KEY_D, () -> {
             rightDown = false;
 
             if (!leftDown) {
                 character.setAnimation(characterIdleAnimation);
-                characterIdleAnimation.start();
-                characterWalkAnimation.stop();
             }
         });
         inputHandler.addKeyDownAction(GLFW_KEY_SPACE, () -> character.setDy(500));
@@ -123,7 +115,6 @@ public class Main {
         characterIdleAnimation = new Animation(List.of(new TextureRegion(TextureFactory.create("characters.png"), 9, 42, 15, 22),
                 new TextureRegion(TextureFactory.create("characters.png"), 9, 42, 15, 22),
                 new TextureRegion(TextureFactory.create("characters.png"), 135, 41, 17, 22)), 30);
-        characterIdleAnimation.start();
 
         var characterFrame = new TextureRegion(TextureFactory.create("characters.png"), 9, 42, 15, 22);
         var characterAnimationStrip = new AnimationStrip(characterFrame, 17, 4);

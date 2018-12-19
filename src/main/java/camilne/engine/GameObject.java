@@ -1,6 +1,7 @@
 package camilne.engine;
 
 import camilne.engine.physics.AABB;
+import camilne.engine.physics.Bounds;
 
 public abstract class GameObject {
 
@@ -10,7 +11,7 @@ public abstract class GameObject {
     private float height;
     private float dx;
     private float dy;
-    private AABB bounds;
+    private Bounds bounds;
     private boolean dynamic;
     private boolean trigger;
     private String collisionGroup;
@@ -29,10 +30,7 @@ public abstract class GameObject {
     }
 
     private void updateBounds() {
-        bounds.setMinX(x);
-        bounds.setMaxX(x + width);
-        bounds.setMinY(y);
-        bounds.setMaxY(y + height);
+        bounds.update(x, y, width, height);
     }
 
     public float getX() {
@@ -87,8 +85,12 @@ public abstract class GameObject {
         this.dy = dy;
     }
 
-    public AABB getBounds() {
+    public Bounds getBounds() {
         return bounds;
+    }
+
+    public void setBounds(Bounds bounds) {
+        this.bounds = bounds;
     }
 
     public boolean isDynamic() {

@@ -16,11 +16,15 @@ public class Sprite extends GameObject {
 
     public Sprite(Animation animation, float x, float y, float width, float height) {
         super(x, y, width, height);
-        this.animation = animation;
+        setAnimation(animation);
     }
 
     public void setAnimation(Animation animation) {
+        if (this.animation != null) {
+            this.animation.stop();
+        }
         this.animation = animation;
+        this.animation.start();
     }
 
     public Animation getAnimation() {
