@@ -51,8 +51,13 @@ public class LineSegment extends Bounds {
     }
 
     @Override
-    public Bounds copy(float scale) {
-        return new LineSegment(new Vector2f(p1), new Vector2f(p2).sub(p1).mul(scale));
+    public Bounds copy() {
+        return new LineSegment(new Vector2f(p1), new Vector2f(p2).sub(p1));
+    }
+
+    @Override
+    public void scale(float amount) {
+        p2.sub(p1).mul(amount).add(p1);
     }
 
     @Override

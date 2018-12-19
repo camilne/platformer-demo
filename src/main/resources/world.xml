@@ -19,6 +19,7 @@
         <tile x="9" y="2" id="stone_cliff_left"/>
         <tile x="10" y="2" id="stone_mid"/>
         <tile x="11" y="3" id="stone_hill_left"/>
+        <tile x="11" y="4" id="stone"/>
         <tile x="12" y="3" id="stone_mid"/>
         <tile x="13" y="3" id="stone_mid"/>
         <tile x="14" y="3" id="stone_right"/>
@@ -27,6 +28,15 @@
         <tile x="12" y="2" id="stone_center"/>
         <tile x="13" y="2" id="stone_center"/>
         <tile x="14" y="2" id="stone_center"/>
+
+        <tile x="0" y="5" id="stone_hill_right"/>
+        <tile x="1" y="4" id="stone_mid"/>
+        <tile x="2" y="4" id="stone_mid"/>
+        <tile x="3" y="4" id="stone_hill_left2"/>
+        <tile x="3" y="5" id="stone_hill_left"/>
+        <tile x="4" y="5" id="stone_hill_left2"/>
+        <tile x="4" y="6" id="stone_hill_left"/>
+        <tile x="5" y="6" id="stone_cliff_right"/>
 
         <tile x="9" y="0" id="stone"/>
         <tile x="10" y="0" id="stone_center"/>

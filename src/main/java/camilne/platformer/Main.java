@@ -62,14 +62,15 @@ public class Main {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         spriteBatch = new SpriteBatch();
-        PhysicsWorld.getInstance().setGravity(-9.8f);
+        PhysicsWorld.getInstance().setGravity(-18);
         camera = new Camera(WIDTH, HEIGHT);
         shader = new Shader("shader.vert", "shader.frag");
         shader.addUniform("u_mvp");
         sprites = new ArrayList<>();
+        createObjects();
         world = WorldReader.readWorld("world.xml");
 
-        createObjects();
+
     }
 
     private long createWindow() {
@@ -124,16 +125,16 @@ public class Main {
         character.setDynamic(true);
         PhysicsWorld.getInstance().addObject(character, Set.of("ground"));
         sprites.add(character);
-
-        var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 6, 73, 18, 23);
-        var enemyAnimationStrip = new AnimationStrip(enemyFrame, 14, 4);
-        var enemyAnimation = new Animation(enemyAnimationStrip, 20);
-        enemyAnimation.start();
-        var enemy = new Sprite(enemyAnimation, 400, 600, 36, 46);
-        enemy.setDynamic(true);
-        enemy.setDx(-32f);
-        PhysicsWorld.getInstance().addObject(enemy, Set.of("ground"));
-        sprites.add(enemy);
+//
+//        var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 6, 73, 18, 23);
+//        var enemyAnimationStrip = new AnimationStrip(enemyFrame, 14, 4);
+//        var enemyAnimation = new Animation(enemyAnimationStrip, 20);
+//        enemyAnimation.start();
+//        var enemy = new Sprite(enemyAnimation, 400, 600, 36, 46);
+//        enemy.setDynamic(true);
+//        enemy.setDx(-32f);
+//        PhysicsWorld.getInstance().addObject(enemy, Set.of("ground"));
+//        sprites.add(enemy);
     }
 
     private void loop() {

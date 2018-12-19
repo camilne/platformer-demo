@@ -70,10 +70,14 @@ public class AABB extends Bounds {
     }
 
     @Override
-    public Bounds copy(float scale) {
-        var width = getMaxX() - getMinX();
-        var height = getMaxY() - getMinY();
-        return new AABB(getMinX(), getMinY(), getMinX() + width * scale, getMinY() + height * scale);
+    public Bounds copy() {
+        return new AABB(getMinX(), getMinY(), getMaxX() - getMinX(), getMaxY() - getMinY());
+    }
+
+    @Override
+    public void scale(float amount) {
+        setMaxX((getMaxX() - getMinX()) * amount + getMinX());
+        setMaxY((getMaxY() - getMinY()) * amount + getMinY());
     }
 
     @Override
@@ -81,6 +85,6 @@ public class AABB extends Bounds {
         setMinX(getMinX() + x);
         setMinY(getMinY() + y);
         setMaxX(getMaxX() + x);
-        setMaxY(getMaxX() + x);
+        setMaxY(getMaxY() + y);
     }
 }

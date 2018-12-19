@@ -28,14 +28,14 @@ class AABBTest {
         a = new AABB(0, 0, 1, 1);
         b = new AABB(1, 0, 1, 1);
 
-        assertTrue(a.intersects(b));
-        assertTrue(b.intersects(a));
+        assertFalse(a.intersects(b));
+        assertFalse(b.intersects(a));
     }
 
     @Test
     void doesIntersectionWithLineSegment() {
         var aabb = new AABB(1, 1, 2, 3);
-        var line = new LineSegment(0, 2, 2, 0);
+        var line = new LineSegment(0, 2, 2, 1);
 
         assertTrue(aabb.intersects(line));
 

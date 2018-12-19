@@ -5,13 +5,13 @@ import org.joml.Vector2f;
 public class Intersection {
     
     public static boolean intersects(AABB a, AABB b) {
-        return b.getMaxX() >= a.getMinX() && b.getMinX() <= a.getMaxX()
-                && b.getMaxY() >= a.getMinY() && b.getMinY() <= a.getMaxY();
+        return b.getMaxX() > a.getMinX() && b.getMinX() < a.getMaxX()
+                && b.getMaxY() > a.getMinY() && b.getMinY() < a.getMaxY();
     }
     
     public static boolean intersects(AABB aabb, Vector2f p) {
-        return p.x >= aabb.getMinX() && p.x <= aabb.getMaxX()
-                && p.y >= aabb.getMinY() && p.y <= aabb.getMaxY();
+        return p.x > aabb.getMinX() && p.x < aabb.getMaxX()
+                && p.y > aabb.getMinY() && p.y < aabb.getMaxY();
     }
 
     public static boolean intersects(LineSegment a, LineSegment b) {
@@ -24,7 +24,7 @@ public class Intersection {
         float s = (-s1Y * (a.getP1().x - b.getP1().x) + s1X * (a.getP1().y - b.getP1().y)) * denom;
         float t = (s2X * (a.getP1().y - b.getP1().y) - s2Y * (a.getP1().x - b.getP1().x)) * denom;
 
-        return s >= 0 && s <= 1 && t >= 0 && t <= 1;
+        return s > 0 && s < 1 && t > 0 && t < 1;
     }
 
     public static boolean intersects(LineSegment line, AABB aabb) {

@@ -68,10 +68,14 @@ public class Triangle extends Bounds {
     }
 
     @Override
-    public Bounds copy(float scale) {
-        var newP2 = new Vector2f(p2).sub(p1).mul(scale);
-        var newP3 = new Vector2f(p3).sub(p1).mul(scale);
-        return new Triangle(new Vector2f(p1), newP2, newP3);
+    public Bounds copy() {
+        return new Triangle(new Vector2f(p1), new Vector2f(p2), new Vector2f(p3));
+    }
+
+    @Override
+    public void scale(float amount) {
+        p2.sub(p1).mul(amount).add(p1);
+        p3.sub(p1).mul(amount).add(p1);
     }
 
     @Override
@@ -79,14 +83,5 @@ public class Triangle extends Bounds {
         p1.add(x, y);
         p2.add(x, y);
         p3.add(x, y);
-    }
-
-    @Override
-    public String toString() {
-        return "Triangle{" +
-                "p1=" + p1 +
-                ", p2=" + p2 +
-                ", p3=" + p3 +
-                '}';
     }
 }

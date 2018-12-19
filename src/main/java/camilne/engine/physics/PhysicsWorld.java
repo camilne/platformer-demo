@@ -30,30 +30,8 @@ public class PhysicsWorld {
         applyGravity();
 
         for (var object : objects) {
-            for (int i = 0; i < steps; i++) {
-                var stepDx = object.getDx() * delta / steps;
-                object.setX(object.getX() + stepDx);
-                GameObject collider;
-                if ((collider = doesCollide(object)) != null) {
-                    if (!object.isTrigger() && !collider.isTrigger()) {
-                        object.setX(object.getX() - stepDx);
-                        object.setDx(0);
-                        break;
-                    }
-                }
-            }
-            for (int i = 0; i < steps; i++) {
-                var stepDy = object.getDy() * delta / steps;
-                object.setY(object.getY() + stepDy);
-                GameObject collider;
-                if ((collider = doesCollide(object)) != null) {
-                    if (!object.isTrigger() && !collider.isTrigger()) {
-                        object.setY(object.getY() - stepDy);
-                        object.setDy(0);
-                        break;
-                    }
-                }
-            }
+            updateX(delta, object);
+            updateY(delta, object);
         }
     }
 
@@ -65,18 +43,67 @@ public class PhysicsWorld {
         }
     }
 
-    private GameObject doesCollide(GameObject object) {
-        for (var o : objects) {
-            if (!o.equals(object)
-                    && o.getCollisionGroup() != null
-                    && collisionGroups.containsKey(object)
-                    && (collisionGroups.get(object).isEmpty()
-                    || collisionGroups.get(object).contains(o.getCollisionGroup()))
-                    && object.getBounds().intersects(o.getBounds())) {
-                return o;
+    private List<GameObject> getColliders(GameObject object) {
+        List<GameObject> objects = new ArrayList<>();
+        for (var o : this.objects) {
+            if (doesCollide(object, o)) {
+                objects.add(o);
             }
         }
-        return null;
+        return objects;
+    }
+
+    private boolean doesCollide(GameObject a, GameObject b) {
+        return shouldCollide(a, b) && a.getBounds().intersects(b.getBounds());
+    }
+
+    private boolean shouldCollide(GameObject a, GameObject b) {
+        if (a == b || !a.isDynamic() || b.getCollisionGroup() == null || !collisionGroups.containsKey(a)) {
+            return false;
+        }
+
+        return collisionGroups.get(a).isEmpty() || collisionGroups.get(a).contains(b.getCollisionGroup());
+    }
+
+    private void updateX(float delta, GameObject object) {
+        for (int i = 0; i < steps; i++) {
+            var stepDx = object.getDx() * delta / steps;
+            object.setX(object.getX() + stepDx);
+            for (var collider : getColliders(object)) {
+                if (!object.isTrigger() && !collider.isTrigger()) {
+                    if (collider.getBounds() instanceof SlopeLeft || collider.getBounds() instanceof SlopeRight) {
+                        object.setY(object.getY() + Math.abs(stepDx * 2));
+                        if (!getColliders(object).isEmpty()) {
+                            object.setY(object.getY() - Math.abs(stepDx * 2));
+                            object.setX(object.getX() - stepDx);
+                            object.setDx(0);
+                            return;
+                        }
+                    } else {
+                        object.setX(object.getX() - stepDx);
+                        object.setDx(0);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private void updateY(float delta, GameObject object) {
+        for (int i = 0; i < steps; i++) {
+            var stepDy = object.getDy() * delta / steps;
+            object.setY(object.getY() + stepDy);
+            for (var collider : getColliders(object)) {
+//                if (object.isDynamic()) {
+//                    System.out.println(collider.getBounds().getClass().getSimpleName());
+//                }
+                if (!object.isTrigger() && !collider.isTrigger()) {
+                    object.setY(object.getY() - stepDy);
+                    object.setDy(0);
+                    return;
+                }
+            }
+        }
     }
 
     public void addObject(GameObject object, Set<String> collisionGroups) {
