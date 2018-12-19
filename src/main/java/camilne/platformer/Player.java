@@ -97,7 +97,7 @@ public class Player extends Sprite {
             }
         });
         inputHandler.addKeyDownAction(GLFW_KEY_SPACE, () -> {
-            setDy(500);
+            setDy(530);
         });
     }
 

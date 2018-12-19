@@ -29,6 +29,7 @@ public class Main {
     private Shader shader;
     private World world;
     private Player player;
+    private Gui gui;
 
     public static void main(String[] args) throws Exception {
         var main = new Main();
@@ -65,6 +66,8 @@ public class Main {
         world = WorldReader.readWorld("world.xml");
 
         createObjects();
+
+        gui = new Gui(WIDTH, HEIGHT);
     }
 
     private long createWindow() {
@@ -155,6 +158,11 @@ public class Main {
         for (var sprite : sprites) {
             spriteBatch.draw(sprite);
         }
+        spriteBatch.end();
+
+        shader.setUniform("u_mvp", gui.getCamera().getCombinedMatrix());
+        spriteBatch.begin();
+        gui.render(spriteBatch);
         spriteBatch.end();
     }
 
