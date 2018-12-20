@@ -62,6 +62,8 @@ public class AudioPool {
         }
 
         var defaultDeviceSpecifier = alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
+        System.out.println("Default device: " + defaultDeviceSpecifier);
+
         context = alcCreateContext(device, (IntBuffer) null);
         alcSetThreadContext(context);
         AL.createCapabilities(deviceCapabilities);
@@ -84,6 +86,7 @@ public class AudioPool {
             var id = alGenBuffers();
             var file = new WaveData(path);
             alBufferData(id, file.getFormat(), file.getData(), file.getSampleRate());
+            file.clear();
             var sound = new Sound(id);
             sounds.put(path, sound);
             return sound;

@@ -11,7 +11,7 @@ public class Source {
 
     Source() {
         id = alGenSources();
-        alSourcef(id, AL_GAIN, 1f);
+        setVolume(1f);
         setPitch(1f);
     }
 
@@ -35,6 +35,14 @@ public class Source {
 
     public void setPosition(Vector2f position) {
         alSource3f(id, AL_POSITION, position.x, position.y, 0f);
+    }
+
+    public void setVelocity(Vector2f velocity) {
+        alSource3f(id, AL_VELOCITY, velocity.x, velocity.y, 0f);
+    }
+
+    public void setVolume(float amount) {
+        alSourcef(id, AL_GAIN, amount);
     }
 
     public void setPitch(float amount) {

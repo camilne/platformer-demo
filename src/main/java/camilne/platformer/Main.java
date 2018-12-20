@@ -3,6 +3,7 @@ package camilne.platformer;
 import camilne.engine.Camera;
 import camilne.engine.Sprite;
 import camilne.engine.audio.AudioPool;
+import camilne.engine.audio.Source;
 import camilne.engine.graphics.*;
 import camilne.engine.input.InputHandler;
 import camilne.engine.physics.PhysicsWorld;
@@ -31,6 +32,7 @@ public class Main {
     private World world;
     private Player player;
     private Gui gui;
+    private Source backgroundSource;
 
     public static void main(String[] args) throws Exception {
         var main = new Main();
@@ -73,6 +75,8 @@ public class Main {
         createObjects();
 
         gui = new Gui(WIDTH, HEIGHT);
+
+        createSound();
     }
 
     private long createWindow() {
@@ -101,6 +105,14 @@ public class Main {
         enemy.setDx(32f);
         PhysicsWorld.getInstance().addObject(enemy, Set.of("ground"));
         sprites.add(enemy);
+    }
+
+    private void createSound() {
+        backgroundSource = AudioPool.getInstance().createSource();
+        var backgroundSound = AudioPool.getInstance().createSound("music.ogg");
+        backgroundSource.setVolume(0.4f);
+        backgroundSource.setLoop(true);
+        backgroundSource.play(backgroundSound);
     }
 
     private void loop() {
@@ -148,6 +160,8 @@ public class Main {
         camera.centerOn(new Vector2f(player.getX() + player.getWidth() / 2f, player.getY() + player.getHeight() / 2f));
         AudioPool.getInstance().setListenerPosition(camera.getPosition().mul(AUDIO_SCALE, new Vector2f()));
         AudioPool.getInstance().setListenerVelocity(new Vector2f(player.getDx(), player.getDy()).mul(AUDIO_SCALE));
+        backgroundSource.setPosition(camera.getPosition().mul(AUDIO_SCALE, new Vector2f()));
+        backgroundSource.setVelocity(new Vector2f(player.getDx(), player.getDy()).mul(AUDIO_SCALE));
 
         PhysicsWorld.getInstance().update(delta);
     }
