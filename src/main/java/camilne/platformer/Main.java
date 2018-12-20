@@ -2,6 +2,9 @@ package camilne.platformer;
 
 import camilne.engine.Camera;
 import camilne.engine.Sprite;
+import camilne.engine.audio.AudioPool;
+import camilne.engine.audio.Sound;
+import camilne.engine.audio.Source;
 import camilne.engine.graphics.*;
 import camilne.engine.input.InputHandler;
 import camilne.engine.physics.PhysicsWorld;
@@ -29,6 +32,8 @@ public class Main {
     private World world;
     private Player player;
     private Gui gui;
+    private Source source;
+    private Sound startSound;
 
     public static void main(String[] args) throws Exception {
         var main = new Main();
@@ -40,7 +45,7 @@ public class Main {
     public void run() throws Exception {
         init();
         loop();
-        glfwTerminate();
+        destroy();
     }
 
     private void init() throws IOException, WorldLoadingException {
@@ -70,6 +75,8 @@ public class Main {
         createObjects();
 
         gui = new Gui(WIDTH, HEIGHT);
+
+        createSounds();
     }
 
     private long createWindow() {
@@ -99,6 +106,17 @@ public class Main {
         enemy.setDx(-32f);
         PhysicsWorld.getInstance().addObject(enemy, Set.of("ground"));
         sprites.add(enemy);
+    }
+
+    private void createSounds() {
+        source = AudioPool.getInstance().createSource();
+        startSound = AudioPool.getInstance().createSound("start.wav");
+        source.play(startSound);
+
+        var backgroundSource = AudioPool.getInstance().createSource();
+        backgroundSource.setLoop(true);
+        var backgroundMusic = AudioPool.getInstance().createSound("guitar_loop.wav");
+        backgroundSource.play(backgroundMusic);
     }
 
     private void loop() {
@@ -164,6 +182,13 @@ public class Main {
         spriteBatch.begin();
         gui.render(spriteBatch);
         spriteBatch.end();
+    }
+
+    private void destroy() {
+        AudioPool.getInstance().destroy();
+
+        glfwDestroyWindow(window);
+        glfwTerminate();
     }
 
 }
