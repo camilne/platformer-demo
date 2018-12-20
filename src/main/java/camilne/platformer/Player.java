@@ -62,37 +62,29 @@ public class Player extends Sprite {
     private void initInput() {
         var inputHandler = InputHandler.getInstance();
 
-        inputHandler.addKeyDownAction(GLFW_KEY_A, () -> {
-            leftDown = true;
-
-            if (isGrounded()) {
-                setAnimation(walkAnimation);
-            }
-        });
-        inputHandler.addKeyUpAction(GLFW_KEY_A, () -> {
-            leftDown = false;
-
-            if (!rightDown && isGrounded()) {
-                setAnimation(idleAnimation);
-            }
-        });
-        inputHandler.addKeyDownAction(GLFW_KEY_D, () -> {
-            rightDown = true;
-
-            if (isGrounded()) {
-                setAnimation(walkAnimation);
-            }
-        });
-        inputHandler.addKeyUpAction(GLFW_KEY_D, () -> {
-            rightDown = false;
-
-            if (!leftDown && isGrounded()) {
-                setAnimation(idleAnimation);
-            }
-        });
+        inputHandler.addKeyDownAction(GLFW_KEY_A, () -> setLeftDown(true));
+        inputHandler.addKeyUpAction(GLFW_KEY_A, () -> setLeftDown(false));
+        inputHandler.addKeyDownAction(GLFW_KEY_D, () -> setRightDown(true));
+        inputHandler.addKeyUpAction(GLFW_KEY_D, () -> setRightDown(false));
         inputHandler.addKeyDownAction(GLFW_KEY_SPACE, () -> {
             setDy(530);
         });
+    }
+
+    private void setLeftDown(boolean down) {
+        leftDown = down;
+
+        if (!rightDown && isGrounded()) {
+            setAnimation(down ? walkAnimation : idleAnimation);
+        }
+    }
+
+    private void setRightDown(boolean down) {
+        rightDown = down;
+
+        if (!leftDown && isGrounded()) {
+            setAnimation(down ? walkAnimation : idleAnimation);
+        }
     }
 
     public void update(float delta) {
