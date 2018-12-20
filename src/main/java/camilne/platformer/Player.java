@@ -68,9 +68,6 @@ public class Player extends Sprite {
             if (isGrounded()) {
                 setAnimation(walkAnimation);
             }
-            walkAnimation.setFlipX(true);
-            idleAnimation.setFlipX(true);
-            airUpAnimation.setFlipX(true);
         });
         inputHandler.addKeyUpAction(GLFW_KEY_A, () -> {
             leftDown = false;
@@ -85,9 +82,6 @@ public class Player extends Sprite {
             if (isGrounded()) {
                 setAnimation(walkAnimation);
             }
-            walkAnimation.setFlipX(false);
-            idleAnimation.setFlipX(false);
-            airUpAnimation.setFlipX(false);
         });
         inputHandler.addKeyUpAction(GLFW_KEY_D, () -> {
             rightDown = false;
@@ -104,8 +98,14 @@ public class Player extends Sprite {
     public void update(float delta) {
         if (leftDown) {
             setDx(-200);
+            walkAnimation.setFlipX(true);
+            idleAnimation.setFlipX(true);
+            airUpAnimation.setFlipX(true);
         } else if (rightDown) {
             setDx(200);
+            walkAnimation.setFlipX(false);
+            idleAnimation.setFlipX(false);
+            airUpAnimation.setFlipX(false);
         } else {
             setDx(0);
         }
