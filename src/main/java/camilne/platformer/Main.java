@@ -26,7 +26,6 @@ public class Main {
     private SpriteBatch spriteBatch;
     private List<Sprite> sprites;
     private Camera camera;
-    private Shader shader;
     private World world;
     private Player player;
     private Gui gui;
@@ -57,11 +56,14 @@ public class Main {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        spriteBatch = new SpriteBatch();
         PhysicsWorld.getInstance().setGravity(-18);
-        camera = new Camera(WIDTH, HEIGHT);
-        shader = new Shader("shader.vert", "shader.frag");
+
+        var shader = new Shader("shader.vert", "shader.frag");
         shader.addUniform("u_mvp");
+        camera = new Camera(WIDTH, HEIGHT);
+        spriteBatch = new SpriteBatch();
+        spriteBatch.setShader(shader);
+
         sprites = new ArrayList<>();
         world = WorldReader.readWorld("world.xml");
 
@@ -150,9 +152,8 @@ public class Main {
         AnimationPool.getInstance().update();
 
         glClear(GL_COLOR_BUFFER_BIT);
-        shader.bind();
-        shader.setUniform("u_mvp", camera.getCombinedMatrix());
 
+        spriteBatch.setCamera(camera);
         spriteBatch.begin();
         world.render(spriteBatch);
         for (var sprite : sprites) {
@@ -160,7 +161,6 @@ public class Main {
         }
         spriteBatch.end();
 
-        shader.setUniform("u_mvp", gui.getCamera().getCombinedMatrix());
         spriteBatch.begin();
         gui.render(spriteBatch);
         spriteBatch.end();

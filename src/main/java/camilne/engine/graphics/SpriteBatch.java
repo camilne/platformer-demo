@@ -1,5 +1,6 @@
 package camilne.engine.graphics;
 
+import camilne.engine.Camera;
 import camilne.engine.Sprite;
 import org.lwjgl.BufferUtils;
 
@@ -18,6 +19,8 @@ public class SpriteBatch {
     private boolean isDrawing;
     private int vbo;
     private float zIndex;
+    private Shader shader;
+    private Camera camera;
 
     public SpriteBatch() {
         sprites = new ArrayList<>();
@@ -35,6 +38,14 @@ public class SpriteBatch {
             throw new RuntimeException("SpriteBatch is not drawing");
         }
         sprites.add(new SpriteEntry(sprite, zIndex));
+        zIndex += 0.01f;
+    }
+
+    public void draw(TextureRegion region, float x, float y, float width, float height) {
+        if (!isDrawing) {
+            throw new RuntimeException("SpriteBatch is not drawing");
+        }
+        sprites.add(new SpriteEntry(region, x, y, width, height, zIndex));
         zIndex += 0.01f;
     }
 
@@ -56,7 +67,16 @@ public class SpriteBatch {
     }
 
     private void render() {
-        sprites.sort(Comparator.comparingInt((SpriteEntry a) -> a.getSprite().getTexture().getId()));
+        if (sprites.isEmpty()) {
+            return;
+        }
+
+        sprites.sort(Comparator.comparingInt((SpriteEntry a) -> a.getRegion().getTexture().getId()));
+
+        if (shader != null && camera != null) {
+            shader.bind();
+            shader.setUniform("u_mvp", camera.getCombinedMatrix());
+        }
 
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
@@ -65,27 +85,26 @@ public class SpriteBatch {
         List<Vertex> vertices = new ArrayList<>();
 
         Texture lastTexture = null;
-        for (var spriteEntry : sprites) {
-            var sprite = spriteEntry.getSprite();
-            if (lastTexture == null || lastTexture != sprite.getTexture()) {
+        for (var item : sprites) {
+            if (lastTexture == null || lastTexture != item.getRegion().getTexture()) {
                 render(vertices);
-                lastTexture = sprite.getTexture();
+                lastTexture = item.getRegion().getTexture();
                 lastTexture.bind();
             }
 
-            var z = spriteEntry.getZIndex();
+            var z = item.getZIndex();
 
-            var u = sprite.getAnimation().getCurrentFrame().getU();
-            var v = sprite.getAnimation().getCurrentFrame().getV();
-            var u2 = sprite.getAnimation().getCurrentFrame().getU2();
-            var v2 = sprite.getAnimation().getCurrentFrame().getV2();
+            var u = item.getRegion().getU();
+            var v = item.getRegion().getV();
+            var u2 = item.getRegion().getU2();
+            var v2 = item.getRegion().getV2();
 
-            vertices.add(new Vertex(sprite.getX(), sprite.getY(), z, u, v2));
-            vertices.add(new Vertex(sprite.getX() + sprite.getWidth(), sprite.getY(), z, u2, v2));
-            vertices.add(new Vertex(sprite.getX() + sprite.getWidth(), sprite.getY() + sprite.getHeight(), z, u2, v));
-            vertices.add(new Vertex(sprite.getX() + sprite.getWidth(), sprite.getY() + sprite.getHeight(), z, u2, v));
-            vertices.add(new Vertex(sprite.getX(), sprite.getY() + sprite.getHeight(), z, u, v));
-            vertices.add(new Vertex(sprite.getX(), sprite.getY(), z, u, v2));
+            vertices.add(new Vertex(item.getX(), item.getY(), z, u, v2));
+            vertices.add(new Vertex(item.getX() + item.getWidth(), item.getY(), z, u2, v2));
+            vertices.add(new Vertex(item.getX() + item.getWidth(), item.getY() + item.getHeight(), z, u2, v));
+            vertices.add(new Vertex(item.getX() + item.getWidth(), item.getY() + item.getHeight(), z, u2, v));
+            vertices.add(new Vertex(item.getX(), item.getY() + item.getHeight(), z, u, v));
+            vertices.add(new Vertex(item.getX(), item.getY(), z, u, v2));
         }
         render(vertices);
 
@@ -109,18 +128,69 @@ public class SpriteBatch {
         }
     }
 
+    public Shader getShader() {
+        return shader;
+    }
+
+    public void setShader(Shader shader) {
+        render();
+        this.shader = shader;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public void setCamera(Camera camera) {
+        render();
+        this.camera = camera;
+    }
+
     private final class SpriteEntry {
 
-        private final Sprite sprite;
+        private final TextureRegion region;
+        private final float x;
+        private final float y;
+        private final float width;
+        private final float height;
         private final float zIndex;
 
         SpriteEntry(Sprite sprite, float zIndex) {
-            this.sprite = sprite;
+            this.region = sprite.getAnimation().getCurrentFrame();
+            this.x = sprite.getX();
+            this.y = sprite.getY();
+            this.width = sprite.getWidth();
+            this.height = sprite.getHeight();
             this.zIndex = zIndex;
         }
 
-        Sprite getSprite() {
-            return sprite;
+        public SpriteEntry(TextureRegion region, float x, float y, float width, float height, float zIndex) {
+            this.region = region;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.zIndex = zIndex;
+        }
+
+        TextureRegion getRegion() {
+            return region;
+        }
+
+        float getX() {
+            return x;
+        }
+
+        float getY() {
+            return y;
+        }
+
+        float getWidth() {
+            return width;
+        }
+
+        float getHeight() {
+            return height;
         }
 
         float getZIndex() {
