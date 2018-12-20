@@ -1,7 +1,6 @@
 package camilne.platformer;
 
 import camilne.engine.physics.*;
-import org.joml.Vector2f;
 
 public enum TileType {
     STONE(144, 648, 70, 70),
@@ -15,7 +14,8 @@ public enum TileType {
     STONE_HILL_LEFT(432, 216, 70, 70, new SlopeLeft(0, 0, 1)),
     STONE_HILL_LEFT2(72, 792, 70, 70),
     STONE_HILL_RIGHT(432, 144, 70, 70, new SlopeRight(0, 0, 1)),
-    STONE_HILL_RIGHT2(72, 720, 70, 70);
+    STONE_HILL_RIGHT2(72, 720, 70, 70),
+    BOX_ITEM(0, 144, 70, 70);
 
     private final int x;
     private final int y;

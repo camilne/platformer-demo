@@ -25,7 +25,6 @@ public class WorldReader {
         }
 
         var world = new World();
-        var tileSize = getTileSize(doc);
 
         var tileNodes = doc.getElementsByTagName("tile");
         for (int i = 0; i < tileNodes.getLength(); i++) {
@@ -39,7 +38,7 @@ public class WorldReader {
 
                 var type = TileType.valueOf(id);
                 try {
-                    world.addTile(new Tile(type, x * tileSize, y * tileSize, tileSize));
+                    world.addTile(new Tile(type, x * Tile.SIZE, y * Tile.SIZE));
                 } catch (IOException e) {
                     throw new WorldLoadingException(e);
                 }

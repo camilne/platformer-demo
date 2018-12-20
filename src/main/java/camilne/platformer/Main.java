@@ -3,8 +3,6 @@ package camilne.platformer;
 import camilne.engine.Camera;
 import camilne.engine.Sprite;
 import camilne.engine.audio.AudioPool;
-import camilne.engine.audio.Sound;
-import camilne.engine.audio.Source;
 import camilne.engine.graphics.*;
 import camilne.engine.input.InputHandler;
 import camilne.engine.physics.PhysicsWorld;
@@ -24,6 +22,7 @@ public class Main {
 
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
+    private static final float AUDIO_SCALE = 1f / Tile.SIZE;
 
     private long window;
     private SpriteBatch spriteBatch;
@@ -32,8 +31,6 @@ public class Main {
     private World world;
     private Player player;
     private Gui gui;
-    private Source source;
-    private Sound startSound;
 
     public static void main(String[] args) throws Exception {
         var main = new Main();
@@ -42,7 +39,7 @@ public class Main {
 
     private Main() { }
 
-    public void run() throws Exception {
+    private void run() throws Exception {
         init();
         loop();
         destroy();
@@ -109,13 +106,10 @@ public class Main {
     }
 
     private void createSounds() {
-        source = AudioPool.getInstance().createSource();
-        startSound = AudioPool.getInstance().createSound("start.wav");
-        source.play(startSound);
-
         var backgroundSource = AudioPool.getInstance().createSource();
         backgroundSource.setLoop(true);
-        var backgroundMusic = AudioPool.getInstance().createSound("guitar_loop.wav");
+        backgroundSource.setPosition(new Vector2f(10.5f, 8.5f));
+        var backgroundMusic = AudioPool.getInstance().createSound("guitar_loop_mono.wav");
         backgroundSource.play(backgroundMusic);
     }
 
@@ -162,6 +156,7 @@ public class Main {
     private void update(float delta) {
         player.update(delta);
         camera.centerOn(new Vector2f(player.getX() + player.getWidth() / 2f, player.getY() + player.getHeight() / 2f));
+        AudioPool.getInstance().setListenerPosition(camera.getPosition().mul(AUDIO_SCALE, new Vector2f()));
 
         PhysicsWorld.getInstance().update(delta);
     }

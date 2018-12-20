@@ -10,15 +10,17 @@ import java.util.HashSet;
 
 public class Tile extends Sprite {
 
+    public static final int SIZE = 55;
+
     private static final String TILE_TEXTURE_PATH = "tiles.png";
 
     private TileType type;
 
-    public Tile(TileType type, float x, float y, float size) throws IOException {
-        super(getTileRegion(type), x, y, size, size);
+    public Tile(TileType type, float x, float y) throws IOException {
+        super(getTileRegion(type), x, y, SIZE, SIZE);
         setCollisionGroup("ground");
         var bounds = type.getBounds().copy();
-        bounds.scale(size);
+        bounds.scale(SIZE);
         bounds.translate(x, y);
         setBounds(bounds);
 

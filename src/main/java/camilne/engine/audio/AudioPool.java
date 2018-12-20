@@ -1,5 +1,6 @@
 package camilne.engine.audio;
 
+import org.joml.Vector2f;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALUtil;
@@ -96,6 +97,10 @@ public class AudioPool {
         var source = new Source();
         sources.add(source);
         return source;
+    }
+
+    public void setListenerPosition(Vector2f position) {
+        alListener3f(AL_POSITION, position.x, position.y, 1f);
     }
 
     public void destroy() {
