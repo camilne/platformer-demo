@@ -12,7 +12,7 @@ public class Source {
     Source() {
         id = alGenSources();
         alSourcef(id, AL_GAIN, 1f);
-        alSourcef(id, AL_PITCH, 1f);
+        setPitch(1f);
     }
 
     public void play(Sound sound) {
@@ -35,6 +35,10 @@ public class Source {
 
     public void setPosition(Vector2f position) {
         alSource3f(id, AL_POSITION, position.x, position.y, 0f);
+    }
+
+    public void setPitch(float amount) {
+        alSourcef(id, AL_PITCH, amount);
     }
 
     public boolean isLoop() {

@@ -34,11 +34,10 @@ public class WorldReader {
 
                 var x = getAttributeAsInteger(element, "x");
                 var y = getAttributeAsInteger(element, "y");
-                var id = getAttributeAsString(element, "id").toUpperCase();
+                var id = getAttributeAsString(element, "id");
 
-                var type = TileType.valueOf(id);
                 try {
-                    world.addTile(new Tile(type, x * Tile.SIZE, y * Tile.SIZE));
+                    world.addTile(TileFactory.create(id, x, y));
                 } catch (IOException e) {
                     throw new WorldLoadingException(e);
                 }
@@ -53,10 +52,6 @@ public class WorldReader {
         var doc = builder.parse(input);
         doc.getDocumentElement().normalize();
         return doc;
-    }
-
-    private static int getTileSize(Document document) throws WorldLoadingException {
-        return getElementAsInteger(document, "tile-size");
     }
 
     private static int getElementAsInteger(Document document, String elementName) throws WorldLoadingException {

@@ -103,6 +103,10 @@ public class AudioPool {
         alListener3f(AL_POSITION, position.x, position.y, 1f);
     }
 
+    public void setListenerVelocity(Vector2f velocity) {
+        alListener3f(AL_VELOCITY, velocity.x, velocity.y, 0f);
+    }
+
     public void destroy() {
         for (var sound : sounds.values()) {
             alSourceStop(sound.getId());

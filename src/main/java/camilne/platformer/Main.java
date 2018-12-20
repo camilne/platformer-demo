@@ -37,7 +37,8 @@ public class Main {
         main.run();
     }
 
-    private Main() { }
+    private Main() {
+    }
 
     private void run() throws Exception {
         init();
@@ -72,8 +73,6 @@ public class Main {
         createObjects();
 
         gui = new Gui(WIDTH, HEIGHT);
-
-        createSounds();
     }
 
     private long createWindow() {
@@ -96,21 +95,12 @@ public class Main {
         var enemyFrame = new TextureRegion(TextureFactory.create("characters.png"), 6, 73, 18, 23);
         var enemyAnimationStrip = new AnimationStrip(enemyFrame, 14, 4);
         var enemyAnimation = new Animation(enemyAnimationStrip, 20);
-        enemyAnimation.setFlipX(true);
         enemyAnimation.start();
         var enemy = new Sprite(enemyAnimation, 300, 600, 36, 46);
         enemy.setDynamic(true);
-        enemy.setDx(-32f);
+        enemy.setDx(32f);
         PhysicsWorld.getInstance().addObject(enemy, Set.of("ground"));
         sprites.add(enemy);
-    }
-
-    private void createSounds() {
-        var backgroundSource = AudioPool.getInstance().createSource();
-        backgroundSource.setLoop(true);
-        backgroundSource.setPosition(new Vector2f(10.5f, 8.5f));
-        var backgroundMusic = AudioPool.getInstance().createSound("guitar_loop_mono.wav");
-        backgroundSource.play(backgroundMusic);
     }
 
     private void loop() {
@@ -157,6 +147,7 @@ public class Main {
         player.update(delta);
         camera.centerOn(new Vector2f(player.getX() + player.getWidth() / 2f, player.getY() + player.getHeight() / 2f));
         AudioPool.getInstance().setListenerPosition(camera.getPosition().mul(AUDIO_SCALE, new Vector2f()));
+        AudioPool.getInstance().setListenerVelocity(new Vector2f(player.getDx(), player.getDy()).mul(AUDIO_SCALE));
 
         PhysicsWorld.getInstance().update(delta);
     }
