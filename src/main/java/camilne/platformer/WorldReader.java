@@ -1,5 +1,6 @@
 package camilne.platformer;
 
+import camilne.engine.physics.PhysicsWorld;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -9,6 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 
 public class WorldReader {
 
@@ -37,7 +39,9 @@ public class WorldReader {
                 var id = getAttributeAsString(element, "id");
 
                 try {
-                    world.addTile(TileFactory.create(id, x, y));
+                    var tile = TileFactory.create(id, x, y);
+                    world.addTile(tile);
+                    PhysicsWorld.getInstance().addObject(tile, new HashSet<>());
                 } catch (IOException e) {
                     throw new WorldLoadingException(e);
                 }

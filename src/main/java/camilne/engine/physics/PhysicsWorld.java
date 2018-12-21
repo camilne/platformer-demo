@@ -32,6 +32,9 @@ public class PhysicsWorld {
         for (var object : objects) {
             updateX(delta, object);
             updateY(delta, object);
+            for (var collider : getColliders(object)) {
+                object.onCollide(collider);
+            }
         }
     }
 
@@ -58,11 +61,11 @@ public class PhysicsWorld {
     }
 
     private boolean shouldCollide(GameObject a, GameObject b) {
-        if (a == b || !a.isDynamic() || b.getCollisionGroup() == null || !collisionGroups.containsKey(a)) {
+        if (a == b || !collisionGroups.containsKey(a)) {
             return false;
         }
 
-        return collisionGroups.get(a).isEmpty() || collisionGroups.get(a).contains(b.getCollisionGroup());
+        return b.getCollisionGroup() == null || collisionGroups.get(a).isEmpty() || collisionGroups.get(a).contains(b.getCollisionGroup());
     }
 
     private void updateX(float delta, GameObject object) {

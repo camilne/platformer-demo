@@ -8,6 +8,8 @@ public class TileFactory {
         switch (id) {
             case "sound_tile":
                 return new SoundTile(x * Tile.SIZE, y * Tile.SIZE);
+            case "explosive_tile":
+                return new ExplosiveTile(x * Tile.SIZE, y * Tile.SIZE);
             default:
                 var type = TileType.valueOf(id.toUpperCase());
                 return new Tile(type, x * Tile.SIZE, y * Tile.SIZE);

@@ -25,7 +25,6 @@ public class Tile extends Sprite {
         setBounds(bounds);
 
         this.type = type;
-        PhysicsWorld.getInstance().addObject(this, new HashSet<>());
     }
 
     private static TextureRegion getTileRegion(TileType type) throws IOException {

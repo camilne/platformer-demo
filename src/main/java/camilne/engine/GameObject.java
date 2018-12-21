@@ -35,6 +35,8 @@ public class GameObject {
         this.collisionGroup = null;
         this.grounded = new Property<>(false);
         source = AudioPool.getInstance().createSource();
+        source.setPitch(1f);
+        source.setVolume(1f);
     }
 
     private void updateBounds() {
@@ -98,6 +100,10 @@ public class GameObject {
     public void setDy(float dy) {
         this.dy = dy;
         updateVelocity();
+    }
+
+    public void onCollide(GameObject other) {
+
     }
 
     public Bounds getBounds() {
