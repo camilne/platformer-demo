@@ -102,8 +102,12 @@ public class GameObject {
         updateVelocity();
     }
 
-    public void onCollide(GameObject other) {
+    public void onEnter(GameObject other) {
+        // Empty
+    }
 
+    public void onExit(GameObject other) {
+        // Empty
     }
 
     public Bounds getBounds() {

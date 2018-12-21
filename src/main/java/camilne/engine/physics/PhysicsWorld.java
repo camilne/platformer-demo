@@ -12,11 +12,13 @@ public class PhysicsWorld {
     private float gravity;
     private List<GameObject> objects;
     private Map<GameObject, Set<String>> collisionGroups;
+    private Set<Collision> lastFrameCollisions;
 
     private PhysicsWorld() {
         steps = 10;
         this.objects = new ArrayList<>();
         this.collisionGroups = new HashMap<>();
+        this.lastFrameCollisions = new HashSet<>();
     }
 
     public static synchronized PhysicsWorld getInstance() {
@@ -29,13 +31,25 @@ public class PhysicsWorld {
     public void update(float delta) {
         applyGravity();
 
+        var thisFrameCollisions = new HashSet<Collision>();
         for (var object : objects) {
             updateX(delta, object);
             updateY(delta, object);
             for (var collider : getColliders(object)) {
-                object.onCollide(collider);
+                var collision = new Collision(object, collider);
+                thisFrameCollisions.add(collision);
+                if (!lastFrameCollisions.contains(collision)) {
+                    object.onEnter(collider);
+                }
             }
         }
+
+        lastFrameCollisions.removeAll(thisFrameCollisions);
+        for (var collision : lastFrameCollisions) {
+            collision.getObjA().onExit(collision.getObjB());
+        }
+
+        lastFrameCollisions = thisFrameCollisions;
     }
 
     private void applyGravity() {

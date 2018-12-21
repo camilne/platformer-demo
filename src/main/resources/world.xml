@@ -67,5 +67,6 @@
         <tile x="26" y="3" id="sound_tile"/>
 
         <tile x="8" y="8" id="explosive_tile"/>
+        <tile x="18" y="1" id="explosive_tile"/>
     </tiles>
 </world>
