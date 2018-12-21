@@ -47,7 +47,6 @@ public class Source {
     }
 
     public void setVolume(float amount) {
-//        System.out.println("Setting volume to " + amount * AudioPool.getInstance().getMasterVolume());
         alSourcef(id, AL_GAIN, amount * AudioPool.getInstance().getMasterVolume());
         volume = amount;
     }

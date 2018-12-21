@@ -13,12 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.lwjgl.openal.AL.*;
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.ALC10.*;
-import static org.lwjgl.openal.AL11.*;
 import static org.lwjgl.openal.ALC11.*;
-import static org.lwjgl.openal.EXTThreadLocalContext.*;
+import static org.lwjgl.openal.EXTThreadLocalContext.alcSetThreadContext;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class AudioPool {
@@ -31,8 +29,9 @@ public class AudioPool {
     private List<Source> sources;
     private float scale;
     private Property<Float> masterVolume;
+    private Source backgroundMusicSource;
 
-    public static AudioPool getInstance() {
+    public static synchronized AudioPool getInstance() {
         if (instance == null) {
             instance = new AudioPool();
         }
@@ -117,10 +116,25 @@ public class AudioPool {
 
     public void setListenerPosition(Vector2f position) {
         alListener3f(AL_POSITION, position.x * scale, position.y * scale, 1f);
+        if (backgroundMusicSource != null) {
+            backgroundMusicSource.setPosition(position);
+        }
     }
 
     public void setListenerVelocity(Vector2f velocity) {
         alListener3f(AL_VELOCITY, velocity.x * scale, velocity.y * scale, 0f);
+        if (backgroundMusicSource != null) {
+            backgroundMusicSource.setVelocity(velocity);
+        }
+    }
+
+    public void setBackgroundMusic(Sound sound, float volume) {
+        if (backgroundMusicSource == null) {
+            backgroundMusicSource = createSource();
+            backgroundMusicSource.setLoop(true);
+        }
+        backgroundMusicSource.setVolume(volume);
+        backgroundMusicSource.play(sound);
     }
 
     public void destroy() {

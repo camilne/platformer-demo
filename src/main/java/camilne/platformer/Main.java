@@ -111,11 +111,8 @@ public class Main {
     }
 
     private void createSound() {
-        backgroundSource = AudioPool.getInstance().createSource();
         var backgroundSound = AudioPool.getInstance().createSound("music.ogg");
-        backgroundSource.setVolume(0.4f);
-        backgroundSource.setLoop(true);
-        backgroundSource.play(backgroundSound);
+        AudioPool.getInstance().setBackgroundMusic(backgroundSound, 0.25f);
     }
 
     private void loop() {
@@ -163,8 +160,6 @@ public class Main {
         camera.centerOn(new Vector2f(player.getX() + player.getWidth() / 2f, player.getY() + player.getHeight() / 2f));
         AudioPool.getInstance().setListenerPosition(camera.getPosition());
         AudioPool.getInstance().setListenerVelocity(new Vector2f(player.getDx(), player.getDy()));
-        backgroundSource.setPosition(camera.getPosition());
-        backgroundSource.setVelocity(new Vector2f(player.getDx(), player.getDy()));
 
         PhysicsWorld.getInstance().update(delta);
 
