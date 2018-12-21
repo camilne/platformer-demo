@@ -1,5 +1,6 @@
 package camilne.engine.audio;
 
+import camilne.engine.general.Property;
 import org.joml.Vector2f;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
@@ -28,6 +29,8 @@ public class AudioPool {
     private long context;
     private Map<String, Sound> sounds;
     private List<Source> sources;
+    private float scale;
+    private Property<Float> masterVolume;
 
     public static AudioPool getInstance() {
         if (instance == null) {
@@ -39,6 +42,12 @@ public class AudioPool {
     private AudioPool() {
         sounds = new HashMap<>();
         sources = new ArrayList<>();
+        masterVolume = new Property<>(1f);
+        masterVolume.addChangeObserver((p, ov, value) -> {
+            for (var source : sources) {
+                source.setVolume(source.getVolume());
+            }
+        });
 
         device = alcOpenDevice((ByteBuffer)null);
         if (device == NULL) {
@@ -58,6 +67,10 @@ public class AudioPool {
             var devices = ALUtil.getStringList(NULL, ALC_ALL_DEVICES_SPECIFIER);
             if (devices == null) {
                 checkAlError();
+            } else {
+                for (int i = 0; i < devices.size(); i++) {
+                    System.out.println(i + ": " + devices.get(i));
+                }
             }
         }
 
@@ -103,11 +116,11 @@ public class AudioPool {
     }
 
     public void setListenerPosition(Vector2f position) {
-        alListener3f(AL_POSITION, position.x, position.y, 1f);
+        alListener3f(AL_POSITION, position.x * scale, position.y * scale, 1f);
     }
 
     public void setListenerVelocity(Vector2f velocity) {
-        alListener3f(AL_VELOCITY, velocity.x, velocity.y, 0f);
+        alListener3f(AL_VELOCITY, velocity.x * scale, velocity.y * scale, 0f);
     }
 
     public void destroy() {
@@ -128,5 +141,21 @@ public class AudioPool {
         if (error != ALC_NO_ERROR) {
             throw new RuntimeException(alcGetString(device, error));
         }
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+
+    public float getMasterVolume() {
+        return masterVolume.get();
+    }
+
+    public void setMasterVolume(float amount) {
+        this.masterVolume.set(amount);
     }
 }

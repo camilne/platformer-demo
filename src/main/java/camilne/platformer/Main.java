@@ -33,6 +33,7 @@ public class Main {
     private Player player;
     private Gui gui;
     private Source backgroundSource;
+    private int ticks;
 
     public static void main(String[] args) throws Exception {
         var main = new Main();
@@ -62,6 +63,8 @@ public class Main {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         PhysicsWorld.getInstance().setGravity(-18);
+        AudioPool.getInstance().setScale(AUDIO_SCALE);
+        AudioPool.getInstance().setMasterVolume(0f);
 
         var shader = new Shader("shader.vert", "shader.frag");
         shader.addUniform("u_mvp");
@@ -158,12 +161,21 @@ public class Main {
     private void update(float delta) {
         player.update(delta);
         camera.centerOn(new Vector2f(player.getX() + player.getWidth() / 2f, player.getY() + player.getHeight() / 2f));
-        AudioPool.getInstance().setListenerPosition(camera.getPosition().mul(AUDIO_SCALE, new Vector2f()));
-        AudioPool.getInstance().setListenerVelocity(new Vector2f(player.getDx(), player.getDy()).mul(AUDIO_SCALE));
-        backgroundSource.setPosition(camera.getPosition().mul(AUDIO_SCALE, new Vector2f()));
-        backgroundSource.setVelocity(new Vector2f(player.getDx(), player.getDy()).mul(AUDIO_SCALE));
+        AudioPool.getInstance().setListenerPosition(camera.getPosition());
+        AudioPool.getInstance().setListenerVelocity(new Vector2f(player.getDx(), player.getDy()));
+        backgroundSource.setPosition(camera.getPosition());
+        backgroundSource.setVelocity(new Vector2f(player.getDx(), player.getDy()));
 
         PhysicsWorld.getInstance().update(delta);
+
+        final var warmupTicks = 3 * 60;
+        if (ticks < warmupTicks) {
+            var value = (float) (Math.sin((float) ticks / warmupTicks * Math.PI - Math.PI / 2f) + 1) / 2f;
+            AudioPool.getInstance().setMasterVolume(value);
+        } else if (ticks == warmupTicks) {
+            AudioPool.getInstance().setMasterVolume(1f);
+        }
+        ticks++;
     }
 
     private void render() {

@@ -1,8 +1,11 @@
 package camilne.engine;
 
+import camilne.engine.audio.AudioPool;
+import camilne.engine.audio.Source;
 import camilne.engine.general.Property;
 import camilne.engine.physics.AABB;
 import camilne.engine.physics.Bounds;
+import org.joml.Vector2f;
 
 public class GameObject {
 
@@ -17,6 +20,7 @@ public class GameObject {
     private boolean trigger;
     private String collisionGroup;
     private Property<Boolean> grounded;
+    private Source source;
 
     public GameObject(float x, float y, float width, float height) {
         this.x = x;
@@ -30,10 +34,16 @@ public class GameObject {
         this.trigger = false;
         this.collisionGroup = null;
         this.grounded = new Property<>(false);
+        source = AudioPool.getInstance().createSource();
     }
 
     private void updateBounds() {
         bounds.update(x, y, width, height);
+        source.setPosition(new Vector2f(x + width / 2f, y + height / 2f));
+    }
+
+    private void updateVelocity() {
+        source.setVelocity(new Vector2f(dx, dy));
     }
 
     public float getX() {
@@ -78,6 +88,7 @@ public class GameObject {
 
     public void setDx(float dx) {
         this.dx = dx;
+        updateVelocity();
     }
 
     public float getDy() {
@@ -86,6 +97,7 @@ public class GameObject {
 
     public void setDy(float dy) {
         this.dy = dy;
+        updateVelocity();
     }
 
     public Bounds getBounds() {
@@ -130,5 +142,9 @@ public class GameObject {
 
     public void setGrounded(boolean grounded) {
         this.grounded.set(grounded);
+    }
+
+    public Source getSource() {
+        return source;
     }
 }

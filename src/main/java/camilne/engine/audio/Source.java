@@ -8,6 +8,7 @@ public class Source {
 
     private final int id;
     private boolean loop;
+    private float volume;
 
     Source() {
         id = alGenSources();
@@ -34,15 +35,21 @@ public class Source {
     }
 
     public void setPosition(Vector2f position) {
-        alSource3f(id, AL_POSITION, position.x, position.y, 0f);
+        alSource3f(id, AL_POSITION, position.x * AudioPool.getInstance().getScale(), position.y * AudioPool.getInstance().getScale(), 0f);
     }
 
     public void setVelocity(Vector2f velocity) {
-        alSource3f(id, AL_VELOCITY, velocity.x, velocity.y, 0f);
+        alSource3f(id, AL_VELOCITY, velocity.x * AudioPool.getInstance().getScale(), velocity.y * AudioPool.getInstance().getScale(), 0f);
+    }
+
+    public float getVolume() {
+        return volume;
     }
 
     public void setVolume(float amount) {
-        alSourcef(id, AL_GAIN, amount);
+//        System.out.println("Setting volume to " + amount * AudioPool.getInstance().getMasterVolume());
+        alSourcef(id, AL_GAIN, amount * AudioPool.getInstance().getMasterVolume());
+        volume = amount;
     }
 
     public void setPitch(float amount) {
