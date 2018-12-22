@@ -16,7 +16,8 @@ public enum TileType {
     STONE_HILL_RIGHT(432, 144, 70, 70, new SlopeRight(0, 0, 1)),
     STONE_HILL_RIGHT2(72, 720, 70, 70),
     BOX_ITEM(0, 144, 70, 70),
-    BOX_EXPLOSIVE(0, 360, 70, 70);
+    BOX_EXPLOSIVE(0, 360, 70, 70),
+    WINDOW(72, 0, 70, 70);
 
     private final int x;
     private final int y;

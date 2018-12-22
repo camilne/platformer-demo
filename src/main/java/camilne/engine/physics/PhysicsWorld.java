@@ -75,11 +75,11 @@ public class PhysicsWorld {
     }
 
     private boolean shouldCollide(GameObject a, GameObject b) {
-        if (a == b || !collisionGroups.containsKey(a)) {
+        if (a == b || b.getCollisionGroup() == null || !collisionGroups.containsKey(a)) {
             return false;
         }
 
-        return b.getCollisionGroup() == null || collisionGroups.get(a).isEmpty() || collisionGroups.get(a).contains(b.getCollisionGroup());
+        return  collisionGroups.get(a).isEmpty() || collisionGroups.get(a).contains(b.getCollisionGroup());
     }
 
     private void updateX(float delta, GameObject object) {

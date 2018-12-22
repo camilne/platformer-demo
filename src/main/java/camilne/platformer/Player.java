@@ -26,6 +26,7 @@ public class Player extends Sprite {
         initInput();
 
         setDynamic(true);
+        setCollisionGroup("player");
         PhysicsWorld.getInstance().addObject(this, Set.of("ground"));
     }
 

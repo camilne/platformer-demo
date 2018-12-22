@@ -3,10 +3,8 @@ package camilne.platformer;
 import camilne.engine.Sprite;
 import camilne.engine.graphics.TextureFactory;
 import camilne.engine.graphics.TextureRegion;
-import camilne.engine.physics.PhysicsWorld;
 
 import java.io.IOException;
-import java.util.HashSet;
 
 public class Tile extends Sprite {
 
