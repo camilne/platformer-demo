@@ -60,10 +60,13 @@ public class SpriteBatch {
             if (string.charAt(i) != '\n') {
                 var glyph = font.getGlyph(string.codePointAt(i));
                 var glyphX = x + glyph.getOffsetX();
+                if (i >= 1 && x != startX) {
+                    glyphX += font.getKerning(string.codePointAt(i - 1), string.codePointAt(i));
+                }
                 var glyphY = y - glyph.getRegion().getHeight() - (glyph.getOffsetY() - font.getSpacingY());
                 sprites.add(new SpriteEntry(glyph.getRegion(), glyphX, glyphY,
                         glyph.getRegion().getWidth(), glyph.getRegion().getHeight(), zIndex));
-                x += glyph.getAdvance() - font.getSpacingX();
+                x += glyph.getAdvance();
             } else {
                 y -= font.getHeight() + font.getSpacingY();
                 x = startX;

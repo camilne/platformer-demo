@@ -96,13 +96,12 @@ public class AngelFontLoader {
         var kernings = new ArrayList<Kerning>();
         for (var i = 0; i < count; i++) {
             var values = parseLine(scanner.nextLine());
-            var kerning = new Kerning();
 
-            kerning.first = getInt(values, "first");
-            kerning.second = getInt(values, "second");
-            kerning.amount = getInt(values, "amount");
+            var first = getInt(values, "first");
+            var second = getInt(values, "second");
+            var amount = getInt(values, "amount");
 
-            kernings.add(kerning);
+            kernings.add(new Kerning(first, second, amount));
         }
         return kernings;
     }
@@ -117,6 +116,9 @@ public class AngelFontLoader {
                     c.width - (info.padding.getLeft() + info.padding.getRight()),
                     c.height - (info.padding.getTop() + info.padding.getBottom()));
             font.addGlyph(new Glyph(c.id, region, c.offsetX, c.offsetY, c.advance));
+        }
+        for (var k : kernings) {
+            font.addKerning(k);
         }
         return font;
     }
@@ -179,12 +181,6 @@ public class AngelFontLoader {
         int offsetY;
         int advance;
         int page;
-    }
-
-    private static final class Kerning {
-        int first;
-        int second;
-        int amount;
     }
 
 }

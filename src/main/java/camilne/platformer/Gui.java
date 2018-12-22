@@ -96,7 +96,7 @@ public class Gui {
 
         try {
             var font = AngelFontLoader.load("arial_18.fnt");
-            var label = new Label(font, "The quick brown fox jumps over the lazy dog. <>?,!@#$%^&*()[]{}-_=+\\|/");
+            var label = new Label(font, "ABCD The quick brown fox jumps over the lazy dog. 11 <>?,!@#$%^&*()[]{}-_=+\\|/");
             label.setX(30);
             label.setY(50);
             root.addChild(label);
