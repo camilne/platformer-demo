@@ -2,6 +2,7 @@ package camilne.engine.graphics;
 
 import camilne.engine.Camera;
 import camilne.engine.Sprite;
+import camilne.engine.graphics.font.Font;
 import org.lwjgl.BufferUtils;
 
 import java.util.ArrayList;
@@ -46,6 +47,28 @@ public class SpriteBatch {
             throw new RuntimeException("SpriteBatch is not drawing");
         }
         sprites.add(new SpriteEntry(region, x, y, width, height, zIndex));
+        zIndex += 0.01f;
+    }
+
+    public void draw(Font font, String string, float x, float y) {
+        if (!isDrawing) {
+            throw new RuntimeException("SpriteBatch is not drawing");
+        }
+        final var startX = x;
+        y += font.getSpacingY();
+        for (var i = 0; i < string.length(); i++) {
+            if (string.charAt(i) != '\n') {
+                var glyph = font.getGlyph(string.codePointAt(i));
+                var glyphX = x + glyph.getOffsetX();
+                var glyphY = y - glyph.getRegion().getHeight() - (glyph.getOffsetY() - font.getSpacingY());
+                sprites.add(new SpriteEntry(glyph.getRegion(), glyphX, glyphY,
+                        glyph.getRegion().getWidth(), glyph.getRegion().getHeight(), zIndex));
+                x += glyph.getAdvance() - font.getSpacingX();
+            } else {
+                y -= font.getHeight() + font.getSpacingY();
+                x = startX;
+            }
+        }
         zIndex += 0.01f;
     }
 

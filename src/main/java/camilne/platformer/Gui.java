@@ -5,10 +5,13 @@ import camilne.engine.Sprite;
 import camilne.engine.graphics.SpriteBatch;
 import camilne.engine.graphics.TextureFactory;
 import camilne.engine.graphics.TextureRegion;
+import camilne.engine.graphics.font.AngelFontLoader;
 import camilne.engine.graphics.gui.Image;
+import camilne.engine.graphics.gui.Label;
 import camilne.engine.graphics.gui.Pane;
 import camilne.engine.graphics.gui.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +84,24 @@ public class Gui {
                     root.addChild(filledImage);
                 }
             }
+        }
+
+
+        var black = new Image(new TextureRegion(TextureFactory.create("black.png")));
+        black.setWidth(800);
+        black.setHeight(30);
+        black.setX(30);
+        black.setY(50);
+        root.addChild(black);
+
+        try {
+            var font = AngelFontLoader.load("arial_18.fnt");
+            var label = new Label(font, "The quick brown fox jumps over the lazy dog. <>?,!@#$%^&*()[]{}-_=+\\|/");
+            label.setX(30);
+            label.setY(50);
+            root.addChild(label);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
