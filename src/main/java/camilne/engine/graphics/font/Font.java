@@ -58,6 +58,25 @@ public abstract class Font {
         return spacingY;
     }
 
+    public int getStringWidth(String string) {
+        var x = 0;
+        var maxX = 0;
+        for (var i = 0; i < string.length(); i++) {
+            if (string.charAt(i) != '\n') {
+                final var glyph = getGlyph(string.codePointAt(i));
+                x += glyph.getAdvance();
+                maxX = Math.max(maxX, x);
+            } else {
+                x = 0;
+            }
+        }
+        return maxX;
+    }
+
+    public int getStringHeight(String string) {
+        return getHeight() * ((int) string.chars().filter(c -> c == '\n').count() + 1);
+    }
+
     private static final class KerningEntry {
         private final int first;
         private final int second;
