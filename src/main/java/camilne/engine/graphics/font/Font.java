@@ -64,8 +64,8 @@ public abstract class Font {
         for (var i = 0; i < string.length(); i++) {
             if (string.charAt(i) != '\n') {
                 final var glyph = getGlyph(string.codePointAt(i));
+                maxX = Math.max(maxX, x + glyph.getRegion().getWidth());
                 x += glyph.getAdvance();
-                maxX = Math.max(maxX, x);
             } else {
                 x = 0;
             }

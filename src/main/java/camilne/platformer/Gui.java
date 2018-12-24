@@ -90,7 +90,7 @@ public class Gui {
         var black = new Image(new TextureRegion(TextureFactory.create("black.png")));
 
         try {
-            var font = AngelFontLoader.load("arial_18.fnt");
+            var font = AngelFontLoader.load("caviar_28.fnt");
             var label = new Label(font, "ABCD The quick brown fox jumps over the lazy dog. 11 <>?,!@#$%^&*()[]{}-_=+\\|/\nThis is a newline test.");
             label.setX(30);
             label.setY(50);
