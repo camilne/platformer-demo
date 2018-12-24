@@ -50,25 +50,31 @@ public class SpriteBatch {
         zIndex += 0.01f;
     }
 
+    /**
+     * Draw a string with a certain font.
+     * @param font The font to draw with.
+     * @param string The string to draw. May contain newline characters.
+     * @param x The left of the string.
+     * @param y The top of the string.
+     */
     public void draw(Font font, String string, float x, float y) {
         if (!isDrawing) {
             throw new RuntimeException("SpriteBatch is not drawing");
         }
         final var startX = x;
-        y += font.getSpacingY();
         for (var i = 0; i < string.length(); i++) {
             if (string.charAt(i) != '\n') {
-                var glyph = font.getGlyph(string.codePointAt(i));
-                var glyphX = x + glyph.getOffsetX();
+                final var glyph = font.getGlyph(string.codePointAt(i));
+                var glyphX = x;
                 if (i >= 1 && x != startX) {
                     glyphX += font.getKerning(string.codePointAt(i - 1), string.codePointAt(i));
                 }
-                var glyphY = y - glyph.getRegion().getHeight() - (glyph.getOffsetY() - font.getSpacingY());
+                var glyphY = y - glyph.getOffsetY() - glyph.getRegion().getHeight();
                 sprites.add(new SpriteEntry(glyph.getRegion(), glyphX, glyphY,
                         glyph.getRegion().getWidth(), glyph.getRegion().getHeight(), zIndex));
                 x += glyph.getAdvance();
             } else {
-                y -= font.getHeight() + font.getSpacingY();
+                y -= font.getHeight();
                 x = startX;
             }
         }
