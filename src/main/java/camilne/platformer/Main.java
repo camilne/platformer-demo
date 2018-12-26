@@ -64,15 +64,17 @@ public class Main {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
         window = createWindow();
-        glEnable(GL_DEBUG_OUTPUT);
 
-        GLUtil.init();
+        GLUtil.initDebug();
 
         initInput();
 
         glClearColor(0.4f, 0.45f, 0.45f, 0);
+        GLUtil.checkError();
         glEnable(GL_BLEND);
+        GLUtil.checkError();
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GLUtil.checkError();
         glEnable(GL_DEPTH_TEST);
         GLUtil.checkError();
 

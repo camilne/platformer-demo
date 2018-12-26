@@ -34,9 +34,6 @@ public class GameObject {
         this.trigger = false;
         this.collisionGroup = null;
         this.grounded = new Property<>(false);
-        source = AudioPool.getInstance().createSource();
-        source.setPitch(1f);
-        source.setVolume(1f);
     }
 
     private void updateBounds() {
@@ -155,6 +152,11 @@ public class GameObject {
     }
 
     public Source getSource() {
+        if (source == null) {
+            source = AudioPool.getInstance().createSource();
+            source.setPitch(1f);
+            source.setVolume(1f);
+        }
         return source;
     }
 }

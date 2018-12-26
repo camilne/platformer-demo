@@ -6,8 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.FileNotFoundException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith({SetupLwjglThreadExtension.class})
 class TextureTest {
@@ -37,6 +36,13 @@ class TextureTest {
 
         try (var texture = new Texture("texture.jpg")) {
             assertEquals(3, texture.getComponents());
+        }
+    }
+
+    @Test
+    void doesLoadIdCorrectly() throws Exception {
+        try (var texture = new Texture("texture.png")) {
+            assertNotEquals(0, texture.getId());
         }
     }
 

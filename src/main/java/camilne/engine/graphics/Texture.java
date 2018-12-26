@@ -17,6 +17,8 @@ public class Texture implements Closeable {
     private final int height;
     private final int components;
 
+    private boolean valid;
+
     public Texture(String path) throws IOException {
         var buffer = IOUtil.ioResourceToByteBuffer(path, 8 * 1024);
 
@@ -39,6 +41,8 @@ public class Texture implements Closeable {
             }
             this.id = createOpenGLTexture(imageData, this.width, this.height, this.components);
         }
+
+        valid = (id != 0);
     }
 
     private static int createOpenGLTexture(ByteBuffer imageData, int width, int height, int components) {
@@ -65,6 +69,7 @@ public class Texture implements Closeable {
     public void destroy() {
         if (id != 0) {
             glDeleteTextures(id);
+            valid = false;
         }
     }
 
@@ -82,5 +87,9 @@ public class Texture implements Closeable {
 
     public int getComponents() {
         return components;
+    }
+
+    public boolean isValid() {
+        return valid;
     }
 }

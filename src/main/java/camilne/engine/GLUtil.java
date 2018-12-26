@@ -18,6 +18,9 @@ public class GLUtil {
 
     private static GLDebugMessageCallback cb;
 
+    private GLUtil() {
+    }
+
     public static void checkError() {
         var error = glGetError();
         while (error != GL_NO_ERROR) {
@@ -26,7 +29,9 @@ public class GLUtil {
         }
     }
 
-    public static void init() {
+    public static void initDebug() {
+        glEnable(GL_DEBUG_OUTPUT);
+        checkError();
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         checkError();
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, (IntBuffer) null, true);

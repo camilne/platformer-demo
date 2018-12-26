@@ -18,7 +18,6 @@ public class TextureFactory {
             textures.put(resource, texture);
             return texture;
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
     }

@@ -2,10 +2,10 @@ package camilne.engine;
 
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class SetupLwjglThreadExtension implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
 
@@ -17,12 +17,12 @@ public class SetupLwjglThreadExtension implements BeforeAllCallback, ExtensionCo
 
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         var window = glfwCreateWindow(1, 1, "", NULL, NULL);
-        if (window == 0) {
+        if (window == NULL) {
             throw new RuntimeException("Failed to create window");
         }
 
         glfwMakeContextCurrent(window);
-        createCapabilities();
+        GL.createCapabilities();
     }
 
     @Override
