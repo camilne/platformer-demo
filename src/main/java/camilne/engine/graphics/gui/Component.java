@@ -1,6 +1,6 @@
 package camilne.engine.graphics.gui;
 
-import camilne.engine.graphics.SpriteBatch;
+import camilne.engine.graphics.Batch;
 
 public abstract class Component {
 
@@ -9,7 +9,7 @@ public abstract class Component {
     private int width;
     private int height;
 
-    public abstract void render(SpriteBatch batch);
+    public abstract void render(Batch batch);
 
     public void scale(float amount) {
         width *= amount;

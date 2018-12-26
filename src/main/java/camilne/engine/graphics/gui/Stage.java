@@ -1,7 +1,7 @@
 package camilne.engine.graphics.gui;
 
 import camilne.engine.Camera;
-import camilne.engine.graphics.SpriteBatch;
+import camilne.engine.graphics.Batch;
 
 public class Stage {
 
@@ -13,7 +13,7 @@ public class Stage {
         camera = new Camera(width, height);
     }
 
-    public void render(SpriteBatch batch) {
+    public void render(Batch batch) {
         batch.setCamera(camera);
         root.render(batch);
     }

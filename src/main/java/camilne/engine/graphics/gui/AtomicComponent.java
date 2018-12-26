@@ -1,7 +1,7 @@
 package camilne.engine.graphics.gui;
 
 import camilne.engine.graphics.Animation;
-import camilne.engine.graphics.SpriteBatch;
+import camilne.engine.graphics.Batch;
 
 public abstract class AtomicComponent extends Component {
 
@@ -16,7 +16,7 @@ public abstract class AtomicComponent extends Component {
     }
 
     @Override
-    public void render(SpriteBatch batch) {
+    public void render(Batch batch) {
         batch.draw(animation.getCurrentFrame(), getX(), getY(), getWidth(), getHeight());
     }
 }

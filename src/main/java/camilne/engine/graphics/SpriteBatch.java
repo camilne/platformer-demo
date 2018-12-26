@@ -1,41 +1,26 @@
 package camilne.engine.graphics;
 
-import camilne.engine.Camera;
 import camilne.engine.Sprite;
 import camilne.engine.graphics.font.Font;
-import org.lwjgl.BufferUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
-public class SpriteBatch {
+public class SpriteBatch extends Batch {
 
     private final List<SpriteEntry> sprites;
 
-    private boolean isDrawing;
-    private int vbo;
     private float zIndex;
-    private Shader shader;
-    private Camera camera;
 
     public SpriteBatch() {
         sprites = new ArrayList<>();
-
-        vbo = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glVertexAttribPointer(0, Vertex.positionElementCount, GL_FLOAT, false, Vertex.stride, Vertex.positionByteOffset);
-        glVertexAttribPointer(1, Vertex.textureElementCount, GL_FLOAT, false, Vertex.stride, Vertex.textureByteOffset);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     public void draw(Sprite sprite) {
-        if (!isDrawing) {
+        if (!isDrawing()) {
             throw new RuntimeException("SpriteBatch is not drawing");
         }
         sprites.add(new SpriteEntry(sprite, zIndex));
@@ -43,7 +28,7 @@ public class SpriteBatch {
     }
 
     public void draw(TextureRegion region, float x, float y, float width, float height) {
-        if (!isDrawing) {
+        if (!isDrawing()) {
             throw new RuntimeException("SpriteBatch is not drawing");
         }
         sprites.add(new SpriteEntry(region, x, y, width, height, zIndex));
@@ -58,7 +43,7 @@ public class SpriteBatch {
      * @param y The top of the string.
      */
     public void draw(Font font, String string, float x, float y) {
-        if (!isDrawing) {
+        if (!isDrawing()) {
             throw new RuntimeException("SpriteBatch is not drawing");
         }
         final var startX = x;
@@ -81,41 +66,17 @@ public class SpriteBatch {
         zIndex += 0.01f;
     }
 
-    public void begin() {
-        if (isDrawing) {
-            throw new RuntimeException("SpriteBatch already drawing");
-        }
-        isDrawing = true;
+    @Override
+    protected void onBegin() {
         sprites.clear();
-        zIndex = 0;
+        zIndex = 0f;
     }
 
-    public void end() {
-        if (!isDrawing) {
-            throw new RuntimeException("SpriteBatch is not drawing");
-        }
-        isDrawing = false;
-        render();
-    }
-
-    private void render() {
-        if (sprites.isEmpty()) {
-            return;
-        }
-
+    @Override
+    protected List<Vertex> createVertices() {
         sprites.sort(Comparator.comparingInt((SpriteEntry a) -> a.getRegion().getTexture().getId()));
 
-        if (shader != null && camera != null) {
-            shader.bind();
-            shader.setUniform("u_mvp", camera.getCombinedMatrix());
-        }
-
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
         List<Vertex> vertices = new ArrayList<>();
-
         Texture lastTexture = null;
         for (var item : sprites) {
             if (lastTexture == null || lastTexture != item.getRegion().getTexture()) {
@@ -138,44 +99,17 @@ public class SpriteBatch {
             vertices.add(new Vertex(item.getX(), item.getY() + item.getHeight(), z, u, v));
             vertices.add(new Vertex(item.getX(), item.getY(), z, u, v2));
         }
-        render(vertices);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
+        return vertices;
     }
 
-    private void render(List<Vertex> vertices) {
-        if (!vertices.isEmpty()) {
-            var vertexBuffer = BufferUtils.createFloatBuffer(vertices.size() * Vertex.elementCount);
-            for (var vertex : vertices) {
-                vertexBuffer.put(vertex.getElements());
-            }
-            vertexBuffer.flip();
-
-            glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_DYNAMIC_DRAW);
-            glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-
-            vertices.clear();
-        }
+    @Override
+    protected boolean shouldRender() {
+        return !sprites.isEmpty();
     }
 
-    public Shader getShader() {
-        return shader;
-    }
-
-    public void setShader(Shader shader) {
-        render();
-        this.shader = shader;
-    }
-
-    public Camera getCamera() {
-        return camera;
-    }
-
-    public void setCamera(Camera camera) {
-        render();
-        this.camera = camera;
+    @Override
+    protected int getRenderingMode() {
+        return GL_TRIANGLES;
     }
 
     private final class SpriteEntry {

@@ -1,13 +1,15 @@
 package camilne.platformer;
 
 import camilne.engine.Camera;
+import camilne.engine.GLUtil;
 import camilne.engine.Sprite;
 import camilne.engine.audio.AudioPool;
-import camilne.engine.audio.Source;
 import camilne.engine.graphics.*;
+import camilne.engine.graphics.gui.GuiDebugRenderer;
 import camilne.engine.input.InputHandler;
 import camilne.engine.physics.PhysicsWorld;
 import org.joml.Vector2f;
+import org.lwjgl.opengl.GL;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL.createCapabilities;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -32,7 +33,7 @@ public class Main {
     private World world;
     private Player player;
     private Gui gui;
-    private Source backgroundSource;
+    private GuiDebugRenderer guiDebugRenderer;
     private int ticks;
 
     public static void main(String[] args) throws Exception {
@@ -53,14 +54,15 @@ public class Main {
         glfwInit();
         window = createWindow();
 
-        initInput();
+//        GLUtil.init();
 
-        int vao = glGenVertexArrays();
-        glBindVertexArray(vao);
+        initInput();
 
         glClearColor(0.4f, 0.45f, 0.45f, 0);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_DEPTH_TEST);
+        GLUtil.checkError();
 
         PhysicsWorld.getInstance().setGravity(-18);
         AudioPool.getInstance().setScale(AUDIO_SCALE);
@@ -78,15 +80,21 @@ public class Main {
         createObjects();
 
         gui = new Gui(WIDTH, HEIGHT);
+        guiDebugRenderer = new GuiDebugRenderer(camera, gui.getStage());
 
         createSound();
     }
 
     private long createWindow() {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL
+
         long window = glfwCreateWindow(WIDTH, HEIGHT, "Game", NULL, NULL);
         glfwMakeContextCurrent(window);
-        createCapabilities();
+        GL.createCapabilities();
         return window;
     }
 
@@ -145,10 +153,7 @@ public class Main {
                 frames = 0;
             }
 
-            var error = glGetError();
-            if (error != 0) {
-                System.out.println("OpenGL error: " + error);
-            }
+            GLUtil.checkError();
 
             glfwSwapBuffers(window);
             glfwPollEvents();
@@ -176,7 +181,7 @@ public class Main {
     private void render() {
         AnimationPool.getInstance().update();
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         spriteBatch.setCamera(camera);
         spriteBatch.begin();
@@ -189,10 +194,13 @@ public class Main {
         spriteBatch.begin();
         gui.render(spriteBatch);
         spriteBatch.end();
+
+        guiDebugRenderer.render();
     }
 
     private void destroy() {
         AudioPool.getInstance().destroy();
+        GLUtil.destroy();
 
         glfwDestroyWindow(window);
         glfwTerminate();

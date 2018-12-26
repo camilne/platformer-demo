@@ -1,8 +1,6 @@
 package camilne.platformer;
 
-import camilne.engine.Camera;
-import camilne.engine.Sprite;
-import camilne.engine.graphics.SpriteBatch;
+import camilne.engine.graphics.Batch;
 import camilne.engine.graphics.TextureFactory;
 import camilne.engine.graphics.TextureRegion;
 import camilne.engine.graphics.font.AngelFontLoader;
@@ -12,8 +10,6 @@ import camilne.engine.graphics.gui.Pane;
 import camilne.engine.graphics.gui.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Gui {
 
@@ -86,12 +82,11 @@ public class Gui {
             }
         }
 
-
         var black = new Image(new TextureRegion(TextureFactory.create("black.png")));
 
         try {
             var font = AngelFontLoader.load("caviar_28.fnt");
-            var label = new Label(font, "ABCD The quick brown fox jumps over the lazy dog. 11 <>?,!@#$%^&*()[]{}-_=+\\|/\nThis is a newline test.");
+            var label = new Label(font, "ABCD The quick brown fox jumps over the lazy dog.\nThis is a newline test.");
             label.setX(30);
             label.setY(50);
             label.setBackground(black);
@@ -101,7 +96,11 @@ public class Gui {
         }
     }
 
-    public void render(SpriteBatch batch) {
+    public void render(Batch batch) {
         stage.render(batch);
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }

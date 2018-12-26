@@ -1,6 +1,6 @@
 package camilne.engine.graphics.gui;
 
-import camilne.engine.graphics.SpriteBatch;
+import camilne.engine.graphics.Batch;
 import camilne.engine.graphics.font.Font;
 
 public class Label extends Component {
@@ -15,7 +15,7 @@ public class Label extends Component {
     }
 
     @Override
-    public void render(SpriteBatch batch) {
+    public void render(Batch batch) {
         background.render(batch);
         batch.draw(font, text, getX(), getY() + font.getHeight());
     }

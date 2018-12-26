@@ -1,6 +1,6 @@
 package camilne.engine.graphics.gui;
 
-import camilne.engine.graphics.SpriteBatch;
+import camilne.engine.graphics.Batch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ public class Pane extends Component {
     }
 
     @Override
-    public void render(SpriteBatch batch) {
+    public void render(Batch batch) {
         for (var child : children) {
             child.render(batch);
         }
