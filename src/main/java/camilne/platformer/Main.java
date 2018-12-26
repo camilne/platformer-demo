@@ -9,6 +9,7 @@ import camilne.engine.graphics.gui.GuiDebugRenderer;
 import camilne.engine.input.InputHandler;
 import camilne.engine.physics.PhysicsWorld;
 import org.joml.Vector2f;
+import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
@@ -48,6 +50,8 @@ public class Main {
     }
 
     private void run() throws Exception {
+        System.out.println("LWJGL Version: " + Version.getVersion());
+
         init();
         loop();
         destroy();
@@ -122,6 +126,7 @@ public class Main {
         }
 
         glfwMakeContextCurrent(window);
+        glfwSwapInterval(1);
         GL.createCapabilities();
         return window;
     }
@@ -235,8 +240,13 @@ public class Main {
         TextureFactory.destroy();
         GLUtil.destroy();
 
+        glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         glfwTerminate();
+        var cb = glfwSetErrorCallback(null);
+        if (cb != null) {
+            cb.free();
+        }
     }
 
 }
