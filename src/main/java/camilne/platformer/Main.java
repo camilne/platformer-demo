@@ -9,6 +9,7 @@ import camilne.engine.graphics.gui.GuiDebugRenderer;
 import camilne.engine.input.InputHandler;
 import camilne.engine.physics.PhysicsWorld;
 import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.Set;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Main {
@@ -27,6 +29,7 @@ public class Main {
     private static final float AUDIO_SCALE = 1f / Tile.SIZE;
 
     private long window;
+    private Shader shader;
     private SpriteBatch spriteBatch;
     private List<Sprite> sprites;
     private Camera camera;
@@ -51,7 +54,10 @@ public class Main {
     }
 
     private void init() throws IOException, WorldLoadingException {
-        glfwInit();
+        GLFWErrorCallback.createPrint(System.err).set();
+        if (!glfwInit()) {
+            throw new IllegalStateException("Unable to initialize GLFW");
+        }
         window = createWindow();
 
 //        GLUtil.init();
@@ -68,7 +74,7 @@ public class Main {
         AudioPool.getInstance().setScale(AUDIO_SCALE);
         AudioPool.getInstance().setMasterVolume(0f);
 
-        var shader = new Shader("shader.vert", "shader.frag");
+        shader = new Shader("shader.vert", "shader.frag");
         shader.addUniform("u_mvp");
         camera = new Camera(WIDTH, HEIGHT);
         spriteBatch = new SpriteBatch();
@@ -83,16 +89,38 @@ public class Main {
         guiDebugRenderer = new GuiDebugRenderer(camera, gui.getStage());
 
         createSound();
+
+        glfwShowWindow(window);
     }
 
     private long createWindow() {
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL
 
-        long window = glfwCreateWindow(WIDTH, HEIGHT, "Game", NULL, NULL);
+        var window = glfwCreateWindow(WIDTH, HEIGHT, "Game", NULL, NULL);
+        if (window == NULL) {
+            throw new IllegalStateException("Failed to create the GLFW window");
+        }
+
+        try (var stack = stackPush()) {
+            var width = stack.mallocInt(1);
+            var height = stack.mallocInt(1);
+
+            glfwGetWindowSize(window, width, height);
+
+            // Get the resolution of the primary monitor
+            var vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            if (vidmode != null) {
+                // Center the window
+                glfwSetWindowPos(window, (vidmode.width() - width.get(0)) / 2,
+                        (vidmode.height() - height.get(0)) / 2);
+            }
+        }
+
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
         return window;
@@ -195,11 +223,16 @@ public class Main {
         gui.render(spriteBatch);
         spriteBatch.end();
 
-        guiDebugRenderer.render();
+//        guiDebugRenderer.render();
     }
 
     private void destroy() {
+        spriteBatch.destroy();
+        guiDebugRenderer.destroy();
+        shader.destroy();
+
         AudioPool.getInstance().destroy();
+        TextureFactory.destroy();
         GLUtil.destroy();
 
         glfwDestroyWindow(window);

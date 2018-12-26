@@ -59,10 +59,10 @@ public class Texture implements Closeable {
 
     @Override
     public void close() {
-        delete();
+        destroy();
     }
 
-    public void delete() {
+    public void destroy() {
         if (id != 0) {
             glDeleteTextures(id);
         }

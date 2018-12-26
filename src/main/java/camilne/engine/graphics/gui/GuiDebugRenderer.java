@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class GuiDebugRenderer {
 
+    private Shader shader;
     private Batch batch;
     private Stage stage;
 
@@ -16,7 +17,7 @@ public class GuiDebugRenderer {
         batch = new ShapeBatch();
         batch.setCamera(camera);
         try {
-            var shader = new Shader("lines.vert", "lines.frag");
+            shader = new Shader("lines.vert", "lines.frag");
             shader.addUniform("u_mvp");
             batch.setShader(shader);
         } catch (IOException e) {
@@ -30,6 +31,13 @@ public class GuiDebugRenderer {
         batch.begin();
         stage.render(batch);
         batch.end();
+    }
+
+    public void destroy() {
+        if (shader != null) {
+            shader.destroy();
+        }
+        batch.destroy();
     }
 
 }

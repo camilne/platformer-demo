@@ -108,4 +108,8 @@ public class Shader {
         GLUtil.checkError();
     }
 
+    public void destroy() {
+        glDeleteProgram(program);
+    }
+
 }

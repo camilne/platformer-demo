@@ -23,4 +23,10 @@ public class TextureFactory {
         }
     }
 
+    public static void destroy() {
+        for (var texture : textures.values()) {
+            texture.destroy();
+        }
+    }
+
 }
